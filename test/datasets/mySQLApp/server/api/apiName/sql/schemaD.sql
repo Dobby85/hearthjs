@@ -1,0 +1,1 @@
+SELECT 'John' as "firstname", 'Doe' as "lastname", 20 as "age";

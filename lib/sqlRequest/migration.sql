@@ -1,0 +1,9 @@
+CREATE SCHEMA IF NOT EXISTS hearthjs;
+
+CREATE TABLE IF NOT EXISTS hearthjs."migration" (
+  "id" SERIAL PRIMARY KEY NOT NULL,
+  "filename" VARCHAR(255) NOT NULL,
+  "up" TEXT NOT NULL DEFAULT '',
+  "down" TEXT NOT NULL DEFAULT '',
+  "dateApplied" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '-Infinity'
+);

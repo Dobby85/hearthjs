@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+const program = require('commander')
+const test = require('../test')
+const debug = require('debug')
+
+program
+  .option('-p, --port <port>', 'Server port')
+  .option('--db_port <dbPort>', 'Database port')
+  .option('--db_host <dHhost>', 'Database host')
+  .option('--db_name <dbName>', 'Database name')
+  .option('--db_username <dbUsername>', 'Database username')
+  .option('--db_password <dbPassword>', 'Database password')
+  .option('-s, --stop', 'Stop when all tests are executed')
+  .description('Run tests')
+  .action((options) => {
+    debug.disable()
+    test.runTest(options, (err) => {
+      if (err) {
+        console.log('An error occured while running test: ', err)
+        process.exit(1)
+      }
+    })
+  })
+  .parse(process.argv)

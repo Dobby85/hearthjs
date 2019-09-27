@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+const program = require('commander')
+const translate = require('../translate')
+const helper = require('../helper')
+
+program
+  .option('-v, --verbose <level>', 'Active a verbosity level (0, 1, 2 or 3) (Default: 0)')
+  .option('-d, --delete', 'Delete unused key (Default: false)')
+  .option('-r, --recursive <active>', 'Parse recursively directories (Default: true)')
+  .option('-p, --path <path>', 'Directory path to scan from server (Default: /)')
+  .description('Find all translations keys')
+  .action((lang, options) => {
+    if (options !== undefined && typeof options !== 'object') {
+      console.log('Bad parameter.\nSee ./hearthjs help translate')
+      process.exit(1)
+    }
+
+    if (options === undefined) {
+      // No lang sendn set lang to undefined to scan all lang directory
+      options = lang
+      lang = undefined
+    }
+
+    const _verbose = parseInt(options.verbose)
+    const _delete = options.delete === true
+    let _translateOptions = {
+      verbose: (isNaN(_verbose)) ? 0 : (_verbose > 3) ? 3 : _verbose,
+      from: options.path,
+      recursive: options.recursive !== 'false',
+      delete: _delete
+    }
+
+    if (_translateOptions.from !== undefined && _translateOptions.delete) {
+      return helper.ask(`Warning, you will delete all keys which are not found in ${_translateOptions.from}.\nAre you sure? [Yn]`, /[Yn]/, (answer) => {
+        if (answer === 'n') {
+          console.log('Operation canceled')
+          process.exit(0)
+        }
+
+        callTranslate(lang, _translateOptions)
+      })
+    }
+
+    callTranslate(lang, _translateOptions)
+  })
+  .parse(process.argv)
+
+function callTranslate (lang, translateOptions) {
+  translate.parseTokens(lang, translateOptions, (err) => {
+    if (err) {
+      console.log(err)
+      process.exit(1)
+    }
+
+    process.exit(0)
+  })
+}

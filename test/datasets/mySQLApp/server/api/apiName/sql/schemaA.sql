@@ -1,0 +1,1 @@
+SELECT 'John' AS firstname, 'Doe' AS lastname

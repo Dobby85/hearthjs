@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+const program = require('commander')
+const server = require('../server')
+const debug = require('debug')
+
+program
+  .option('-p, --port <port>', 'Server port')
+  .option('-c, --cluster <cluster>', 'Number of cluster')
+  .option('-l, --lang <lang>', 'Default server lang')
+  .option('--db_port <dbPort>', 'Database port')
+  .option('--db_host <dHhost>', 'Database host')
+  .option('--db_name <dbName>', 'Database name')
+  .option('--db_username <dbUsername>', 'Database username')
+  .option('--db_password <dbPassword>', 'Database password')
+  .description('Start server')
+  .action((mode, options) => {
+    if (typeof mode === 'object') {
+      console.log('Invalid argument for start command. Try dev, test or prod')
+      return process.exit(1)
+    }
+
+    if (mode !== 'dev' && mode !== 'prod') {
+      console.log(`Unknown mode ${mode}. Try with dev or prod.`)
+      return process.exit(1)
+    }
+
+    debug.disable()
+    server.run(mode, process.env.HEARTH_SERVER_PATH, options, (err) => {
+      if (err) {
+        console.log('An error occured while running server: ', err)
+        return process.exit(1)
+      }
+    })
+  })
+  .parse(process.argv)

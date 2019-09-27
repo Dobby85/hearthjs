@@ -1,0 +1,1 @@
+SELECT 'Hello' AS "str" WHERE 1 = {{ data.id }}

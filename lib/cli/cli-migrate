@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+const program = require('commander')
+const migrationCli = require('../migrationCLI')
+
+program
+  .option('-v, --version <version>', 'Migrate to a specific version')
+  .option('-c, --create', 'Create a migration')
+  .action((mode, options) => {
+    if (options === undefined && mode.create === undefined) {
+      console.log('You must specify more parameters to migrate (<mode> or -c)')
+      process.exit(1)
+    }
+
+    if (options === undefined) {
+      // Create migration
+      return migrationCli.create((err) => {
+        if (err) {
+          console.log('An error while creating migration ', err)
+          return process.exit(1)
+        }
+
+        console.log('\nMigration successfully created')
+        return process.exit(0)
+      })
+    }
+
+    migrationCli.migrate(mode, options.version, (err) => {
+      if (err) {
+        console.log('An error occured, changes has been rollback ', err)
+        return process.exit(1)
+      }
+      return process.exit(0)
+    })
+  })
+  .parse(process.argv)

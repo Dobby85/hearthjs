@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+const program = require('commander')
+const helper = require('../helper')
+
+program
+  .description('Init an hearthjs project')
+  .action(() => {
+    helper.createArchitecture((err) => {
+      if (err) {
+        console.log('An error occured while creating architecture: ', err)
+        process.exit(1)
+      }
+
+      console.log('Project architecture created, let\'s start coding!')
+      process.exit(0)
+    })
+  })
+  .parse(process.argv)
