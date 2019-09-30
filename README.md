@@ -11,4 +11,4 @@ Here is a list of tools that HearthJS manage
 - Cron
 - ...
 
-You can find the complete documentation here
+You can find the complete documentation here: [www.hearthjs.io](http://www.hearthjs.io)
