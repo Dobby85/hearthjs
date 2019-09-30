@@ -1,5 +1,8 @@
 # HearthJS
 
+### v1.0.1
+- Update main in package.json
+
 ### v1.0.0
 - Add first version of hearthjs
 - Add Logger
