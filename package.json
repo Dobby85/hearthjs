@@ -2,8 +2,8 @@
   "name": "hearthjs",
   "version": "1.0.0",
   "description": "A NodeJS server framework to build fast Rest API",
-  "main": "index.js",
-  "bin": "./bin/hearthjs",
+  "main": "lib/index.js",
+  "bin": "bin/hearthjs",
   "scripts": {
     "test-debug": "NODE_ENV=test DEBUG=hearthjs ./node_modules/mocha/bin/mocha test -b --watch",
     "nyc": "NODE_ENV=test; nyc mocha test -b",
