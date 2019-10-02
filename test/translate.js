@@ -88,8 +88,10 @@ describe('Translate', () => {
       translate._parseFile(path.join(__dirname, 'datasets', 'translations', 'keys.js'), (err) => {
         assert.strictEqual(err, null)
         const _keys = translate._getMatchedKeys()
+        assert.strictEqual(_keys.length, 3)
         assert.strictEqual(_keys[0].token, 'Error...')
         assert.strictEqual(_keys[1].token, 'Hello')
+        assert.strictEqual(_keys[2].token, 'Hello  |/ \\\\ my,?!:+-*=0 1 2 3 frien')
         done()
       })
     })

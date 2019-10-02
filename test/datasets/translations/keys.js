@@ -29,7 +29,7 @@ const schemas = {
       if (cluster.worker) {
         _id = cluster.worker.id
       }
-
+      console.log(t('Hello  |/ \\ my,?!:+-*=0 1 2 3 frien', 'en'))
       return res.json({ id: _id })
     }
   }

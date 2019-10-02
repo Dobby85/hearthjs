@@ -31,6 +31,16 @@ hearthjs.server.getEndpoint() // return http://localhost:3000/
 
 So, even if you update your configuration, you don't have to update your port request for each test.
 
+### Test files
+
+Your tests files must be in a `test` directory in your `api` directories or in a `test` directory at the root of your `server` directory.
+Moreover, they must be JS files starting by `test.`.
+
+Example:
+*/server/api/myApi/test/test.myFile.js*
+*/server/api/otherApi/test/test.myFile2.js*
+*/server/test/test.myFile3.js*
+
 ### Datasets
 
 When you test your API, it can be usefull to have datasets in database. You can add and clean them easily.
@@ -47,11 +57,7 @@ const path = require('path')
 
 describe('Test', () => {
   before((done) => {
-    hearthjs.server.run('test', path.join(__dirname, 'server'), (err) => {
-      // Check err
-
-      hearthjs.datasets.insert(['dataset1', 'dataset2'], done)
-    })
+    hearthjs.datasets.insert(['dataset1', 'dataset2'], done)
   })
 
   after((done) => {

@@ -64,7 +64,7 @@ let in = {
 
 You can use specific type:
 
-- **date** Check date format looks like `dd/mm/yyyy` and if the date exists
+- **date** Check date format looks like `dd/mm/yyyy` or is a date object and if the date exists
 - **url** Check the url format
 - **mail** Check mail format
 - **phone** Check phone format looks like `0000000000`, `00.00.00.00.00` or `00 00 00 00 00`

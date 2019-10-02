@@ -11,7 +11,7 @@ const schemas = {
 
   schema: {
     before: (req, res, next) => {
-      return res.send(t('Hello', 'en'))
+      return res.send(t('Hello my friend', 'en'))
     }
   },
 

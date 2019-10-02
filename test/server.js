@@ -50,6 +50,50 @@ describe('Server', () => {
     })
   })
 
+  describe('Init functions', () => {
+    before(function (done) {
+      fs.copyFile(path.join(__dirname, 'datasets', 'indexFiles', 'basicIndex.js'), path.join(__dirname, 'datasets', 'myApp', 'server', 'index.js'), (err) => {
+        assert.strictEqual(err, null)
+        process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
+        app.run('test', process.env.HEARTH_SERVER_PATH, done)
+      })
+    })
+
+    after((done) => {
+      fs.unlinkSync(path.join(__dirname, 'datasets', 'myApp', 'server', 'index.js'))
+      fs.unlinkSync(path.join(__dirname, 'datasets', 'myApp', 'server', 'test.test'))
+      app.close(done)
+    })
+
+    it('should have call all init functions', () => {
+      const content = fs.readFileSync(path.join(__dirname, 'datasets', 'myApp', 'server', 'test.test'), 'utf8')
+      assert.strictEqual(content, 'OlatchoupifinalInit')
+    })
+  })
+
+  describe('Init functions 2', () => {
+    before(function (done) {
+      fs.copyFile(path.join(__dirname, 'datasets', 'indexFiles', 'middlewareIndex.js'), path.join(__dirname, 'datasets', 'myApp', 'server', 'index.js'), (err) => {
+        assert.strictEqual(err, null)
+        process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
+        app.run('test', process.env.HEARTH_SERVER_PATH, done)
+      })
+    })
+
+    after((done) => {
+      fs.unlinkSync(path.join(__dirname, 'datasets', 'myApp', 'server', 'index.js'))
+      app.close(done)
+    })
+
+    it('should add a middleware', (done) => {
+      request.get(app.server.getEndpoint() + 'user', function (err, response, body) {
+        assert.strictEqual(err, null)
+        assert.strictEqual(response.body, 'Pass to middleware')
+        done()
+      })
+    })
+  })
+
   describe('API', function () {
     before(function (done) {
       process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
