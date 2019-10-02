@@ -13,6 +13,8 @@ myProject
     │   └── test.json
     ├── api
     │   └── apiName
+    |       ├── test
+    |       |   └── test.apiName.js
     |       ├── sql
     |       |   └── sqlFile.sql
     │       └── api.apiName.js
@@ -21,8 +23,11 @@ myProject
     |   └── en.json
     ├── cron
     |   └── cron.cronName.js
+    ├── test
+    |   └── test.global.js
     ├── logs
-    └── migration
+    ├── migration
+    └── index.js
 ```
 
 ### Naming convention
@@ -96,3 +101,46 @@ The difference between `start` and `debug` command is that in `debug` mode, the 
 - `server/api/**/sql/*.sql`
 
 So each time you update one of this file, your server automatically restart with new changes.
+
+### Initialisation
+
+You can call init functions when the server starts. Three functions are available:
+
+- beforeInit
+- init
+- afterInit
+
+All this function have at least a callback in parameter. You **must** call it with an error or not.
+
+##### beforeInit
+
+This function is called before all initialisation. The server has not been created yet.
+
+##### init
+
+This function receives the express server in parameter. This is in this function you can add your own middleware.
+
+##### afterInit
+
+This function is called after all initialisations.
+
+These functions are in the `index.js` file which is at the root of your server directory. It must looks like this:
+
+```js
+const server = {
+  beforeInit: (callback) => {
+    return callback(null)
+  },
+
+  init: (server, callback) => {
+    // Add your middleware here
+    return callback(null)
+  },
+
+  afterInit: (server, callback) => {
+    return callback(null)
+  }
+}
+
+module.exports = server
+```

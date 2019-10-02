@@ -806,6 +806,13 @@ describe('Validation', () => {
         })
       })
 
+      it('should be a valid date if data is a new date', () => {
+        let result = validation._validateField(['type', 'date'], new Date('10/09/1998'), 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
       it('should not match date regex', () => {
         let result = validation._validateField(['type', 'date'], '10-09-1998', 'key')
         assert.deepStrictEqual(result, {

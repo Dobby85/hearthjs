@@ -12,4 +12,5 @@
 * [Database](/database/#database)
 * [Tests](/tests/#tests)
   * [Run](/tests/#run)
+  * [Test files](/tests/#test-files)
   * [Datasets](/tests/#datasets)

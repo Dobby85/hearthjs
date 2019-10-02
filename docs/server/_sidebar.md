@@ -5,6 +5,7 @@
   * [Configuration](/server/#configuration)
   * [Cluster](/server/#cluster)
   * [Run](/server/#run)
+  * [Initialisation](/server/#initialisation)
 * [Api](/api/#api)
 * [Converter](/converter/#api)
 * [Data validation](/validation/#validation)
