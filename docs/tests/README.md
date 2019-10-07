@@ -36,10 +36,113 @@ So, even if you update your configuration, you don't have to update your port re
 Your tests files must be in a `test` directory in your `api` directories or in a `test` directory at the root of your `server` directory.
 Moreover, they must be JS files starting by `test.`.
 
-Example:
-*/server/api/myApi/test/test.myFile.js*
-*/server/api/otherApi/test/test.myFile2.js*
-*/server/test/test.myFile3.js*
+Example:  
+*/server/api/myApi/test/test.myFile.js*  
+*/server/api/otherApi/test/test.myFile2.js*  
+*/server/test/test.myFile3.js*  
+
+### HTTP Client
+
+You can use the hearthjs http client to keep a session during multiple tests.
+
+#### Create an client instance
+
+```js
+const hearthjs = require('hearthjs')
+
+describe('Test', () => {
+  let _user = new hearthjs.httpClient('email@email.com', 'password')
+
+  before((done) => {
+    _user.login(done)
+  })
+
+  after((done) => {
+    _user.logout(done)
+  })
+})
+```
+
+By default, the `login` function call the `/login` route. Same thing for the `logout` function which call the `/logout` route. You can override them like this:
+
+```js
+const hearthjs = require('hearthjs')
+
+let _user = new hearthjs.httpClient('email@email.com', 'password')
+
+_user.login('/new-login-route', (err, response, body) => {})
+_user.logout('/new-logout-route', (err, response, body) => {})
+```
+
+#### Execute a request
+
+You can execute simple HTTP request with the client. If you are connected, the client add the cookie to the request to execute an authenticated test.
+
+You can execute `GET`, `POST`, `PUT` and `DELETE` requests.
+
+```js
+const hearthjs = require('hearthjs')
+
+describe('Test', () => {
+  let _user = new hearthjs.httpClient('email@email.com', 'password')
+
+  before((done) => {
+    _user.login(done)
+  })
+
+  after((done) => {
+    _user.logout(done)
+  })
+
+  it('Should execute a get request', (done) => {
+    _user.get('/my-route', (err, response, body) => {
+      // The body is a valid JSON object
+    })
+  })
+
+  it('Should execute a post request', (done) => {
+    _user.post('/my-route', {
+      data: ''
+    }, (err, response, body) => {
+      // Handle the response here
+    })
+  })
+})
+```
+
+#### Execute a complex request
+
+If you need to custom your request, you can make authenticated request easily.
+
+You can get the complete URL with the `getCompleteUrl('/my-route')` and get the user cookie with `cookie` property.
+
+```js
+const hearthjs = require('hearthjs')
+const request = require('request')
+
+describe('Test', () => {
+  let _user = new hearthjs.httpClient('email@email.com', 'password')
+
+  before((done) => {
+    _user.login(done)
+  })
+
+  after((done) => {
+    _user.logout(done)
+  })
+
+  it('Should execute a complex request', (done) => {
+    request.get({
+      url: _user.getCompleteUrl('/my-route'),
+      headers: {
+        Cookie: _user.cookie
+      }
+    }, (err, response, body) => {
+      // Handle response
+    })
+  })
+})
+```
 
 ### Datasets
 

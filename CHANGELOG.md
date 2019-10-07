@@ -1,5 +1,17 @@
 # HearthJS
 
+### v1.2.0
+- Watch following files when launching `./hearthjs test` command.
+  - `/api/**/test/test.*.js`
+  - `/api/**/api.*.js`
+  - `/api/**/sql/*.sql`
+  - `/test/test.*.js`
+- Correct errors in documentation
+- Data validation: Correct date type validation. Accet any valid date.
+- `./hearthjs test` crash on first failed test
+- translations: Check value is not empty. If the value is empty, the key is returned.
+- Add http client for tests. It is possible to create instance of login user to execute authenticated request.
+
 ### v1.1.0
 - Add init function (beforeInit, init and after init)
 - Correct translations regex. Now it match space, `.`, `,`, `/`, `\`, `|`, `?`, `!`, `:`, `+`, `-`, `*`, `=`

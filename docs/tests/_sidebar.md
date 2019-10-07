@@ -13,4 +13,5 @@
 * [Tests](/tests/#tests)
   * [Run](/tests/#run)
   * [Test files](/tests/#test-files)
+  * [HTTP Client](/tests/#http-client)
   * [Datasets](/tests/#datasets)

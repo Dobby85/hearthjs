@@ -53,6 +53,19 @@ There are 3 functions you can declare when you build an addon.
 
 Do not forget to call the callback, else the application couldn't run.
 
+*Note: If you want return an error in your addon, you can pass a parameter to the next function. This will return an error to the user.*
+
+Example:
+
+```js
+let addon = {
+  exec: function (addonValue, database, route, schema, req, res, next) {
+    // Want return an error
+    return next('Oups an error occured')
+  }
+}
+```
+
 ### Use an addon
 
 You can use multiple addons.
@@ -62,10 +75,11 @@ const roleAddon = require('roleAddon')
 const app = require('hearthjs')
 
 app.useAddon(roleAddon)
-app.run(...)
 ```
 
 After that, you can use the addon in your schemas.
+
+You can add all your addons in the [`beforeInit` function of your server](/server/#initialisation).
 
 #### Override schemaKeyName
 

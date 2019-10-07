@@ -48,8 +48,8 @@ describe('Translate', () => {
   describe('Get translation', () => {
     before(() => {
       translate._setTranslations({
-        en: { hello: 'hi', me: 'me' },
-        fr: { hello: 'salut', me: 'moi' }
+        en: { hello: 'hi', me: 'me', goodbye: '' },
+        fr: { hello: 'salut', me: 'moi', goodbye: '' }
       })
     })
 
@@ -76,6 +76,11 @@ describe('Translate', () => {
     it('should return the value if the key and the lang exists', () => {
       translate._setDefaultLanguage('en')
       assert.strictEqual(translate.t('me', 'fr'), 'moi')
+    })
+
+    it('should return the key if the value is empty', () => {
+      translate._setDefaultLanguage('en')
+      assert.strictEqual(translate.t('goodbye'), 'goodbye')
     })
   })
 

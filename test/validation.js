@@ -807,7 +807,15 @@ describe('Validation', () => {
       })
 
       it('should be a valid date if data is a new date', () => {
-        let result = validation._validateField(['type', 'date'], new Date('10/09/1998'), 'key')
+        let _date = new Date('10/09/1998')
+        let result = validation._validateField(['type', 'date'], _date.toString(), 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid date if data is not on two digit', () => {
+        let result = validation._validateField(['type', 'date'], '9/2/1998', 'key')
         assert.deepStrictEqual(result, {
           valid: true
         })
@@ -816,8 +824,7 @@ describe('Validation', () => {
       it('should not match date regex', () => {
         let result = validation._validateField(['type', 'date'], '10-09-1998', 'key')
         assert.deepStrictEqual(result, {
-          valid: false,
-          message: 'key has an invalid date format. It must be dd/mm/yyyy.'
+          valid: true
         })
       })
 
@@ -825,7 +832,15 @@ describe('Validation', () => {
         let result = validation._validateField(['type', 'date'], '31/02/2018', 'key')
         assert.deepStrictEqual(result, {
           valid: false,
-          message: 'key is an invalid date. 31/02/2018 does not exists.'
+          message: 'key is invalid. Check your date exists and respects the following format mm/dd/yyyy.'
+        })
+      })
+
+      it('should not validate a string', () => {
+        let result = validation._validateField(['type', 'date'], 'toto', 'key')
+        assert.deepStrictEqual(result, {
+          valid: false,
+          message: 'key is invalid. Check your date exists and respects the following format mm/dd/yyyy.'
         })
       })
 
