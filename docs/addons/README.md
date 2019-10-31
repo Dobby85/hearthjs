@@ -1,6 +1,6 @@
 ## Addons
 
-An addon is a key you can in your schemas to check things or execute actions.
+An addon is a key you can insert in your schemas to check things or execute actions.
 
 ### Build an addon
 
@@ -53,7 +53,7 @@ There are 3 functions you can declare when you build an addon.
 
 Do not forget to call the callback, else the application couldn't run.
 
-*Note: If you want return an error in your addon, you can pass a parameter to the next function. This will return an error to the user.*
+*Note: If you want to return an error in your addon, you can pass a parameter to the next function. This will return an error to the user.*
 
 Example:
 
