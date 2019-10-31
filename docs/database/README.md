@@ -4,7 +4,7 @@ HearthJS works with PostgreSQL database.
 
 ### Connection
 
-HearthJS take server config to connect to postgres. If following environment variable are set, they will be use for postgres connection instead of conf.
+HearthJS takes server conf to connect to postgres. If the following environment variables are set, they will be use for postgres connection instead of conf.
 
 - `APP_DATABASE_USER`
 - `APP_DATABASE_PASSWORD`
@@ -20,7 +20,7 @@ To update it, you can use the following key in your configuration file: `APP_DAT
 
 ### Query
 
-You have the possibility to execute SQL query at anytime. The second parameter which is `params` that you can give to postgreSQL is optional.
+You have the possibility to execute a SQL query at anytime. The second parameter that you can give to postgreSQL (`params`) is optional.
 
 ```js
 const hearthjs = require('hearthjs')
@@ -50,7 +50,7 @@ Hearthjs has its own migration system. It must be used with the CLI.
 ./hearthjs migrate -c
 ```
 
-This command will ask you a description, write it and valid.
+This command will ask you to write a description about this migration's goals.
 Once you did this, two files will be created in your `migration` directory. An `up` and a `down` file.
 Write in your `up` file your database modification and in the `down` file the request which can **cancel** your up.
 
