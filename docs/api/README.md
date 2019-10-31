@@ -83,7 +83,7 @@ hearthjs.api.define('apiName', (router) => {
 
 ### Route without schema
 
-If you don't wanna execute a schema but a simple function like express, you can set your function instead of a schema.
+If you don't want to execute a schema but a simple function like express, you can set your function instead of a schema.
 
 ```js
 const schema = {
@@ -101,7 +101,7 @@ hearthjs.api.define('apiName', schema, (router) => {
 
 ### Returned data
 
-HearthJS return a JSON object with the following property to the user.
+HearthJS returns a JSON object with the following properties to the user.
 
 ```js
 {
