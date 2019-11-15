@@ -3,7 +3,10 @@ const program = require('commander')
 const server = require('../server')
 const debug = require('debug')
 
+let modeValue
+
 program
+  .arguments('<mode>')
   .option('-p, --port <port>', 'Server port')
   .option('-c, --cluster <cluster>', 'Number of cluster')
   .option('-l, --lang <lang>', 'Default server lang')
@@ -14,10 +17,7 @@ program
   .option('--db_password <dbPassword>', 'Database password')
   .description('Start server')
   .action((mode, options) => {
-    if (typeof mode === 'object') {
-      console.log('Invalid argument for start command. Try dev, test or prod')
-      return process.exit(1)
-    }
+    modeValue = mode
 
     if (mode !== 'dev' && mode !== 'prod') {
       console.log(`Unknown mode ${mode}. Try with dev or prod.`)
@@ -33,3 +33,8 @@ program
     })
   })
   .parse(process.argv)
+
+if (typeof modeValue === 'undefined') {
+  console.error('You must specify mode `dev` or `prod`.')
+  process.exit(1)
+}

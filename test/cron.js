@@ -154,14 +154,14 @@ describe('Cron', () => {
           for (let i = 0; i < _nbQueries; i++) {
             // Crash server every 20 * 10ms
             if (i % 20 === 0) {
-              setTimeout(crash, 10 * i)
+              setTimeout(crash, 20 * i)
             } else {
-              setTimeout(sendRequest, 10 * i)
+              setTimeout(sendRequest, 20 * i)
             }
           }
         }, 1000)
       })
-    }).timeout(8000)
+    }).timeout(10000)
   })
 
   describe('Function add, start, stop and getAction', () => {

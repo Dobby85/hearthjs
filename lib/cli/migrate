@@ -3,15 +3,16 @@ const program = require('commander')
 const migrationCli = require('../migrationCLI')
 
 program
+  .arguments('[mode]')
   .option('-v, --version <version>', 'Migrate to a specific version')
   .option('-c, --create', 'Create a migration')
   .action((mode, options) => {
-    if (options === undefined && mode.create === undefined) {
+    if (mode === undefined && options.create === undefined) {
       console.log('You must specify more parameters to migrate (<mode> or -c)')
       process.exit(1)
     }
 
-    if (options === undefined) {
+    if (options.create) {
       // Create migration
       return migrationCli.create((err) => {
         if (err) {
