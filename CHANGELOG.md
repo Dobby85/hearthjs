@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.0.0
+- Add dynamic command
+
 ### v1.3.0
 - Update commander version from 3.0.1 to 4.0.1
 - Execute addons before middleware

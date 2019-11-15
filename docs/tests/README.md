@@ -74,6 +74,20 @@ _user.login('/new-login-route', (err, response, body) => {})
 _user.logout('/new-logout-route', (err, response, body) => {})
 ```
 
+#### Headers
+
+You can add a default header which will be added automatically to requests.
+
+```js
+describe('Test', () => {
+  let _user = new hearthjs.httpClient('email@email.com', 'password')
+
+  _user.headers = {
+    // Write here the header that must be in all request
+  }
+})
+```
+
 #### Execute a request
 
 You can execute simple HTTP request with the client. If you are connected, the client add the cookie to the request to execute an authenticated test.

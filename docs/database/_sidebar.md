@@ -9,6 +9,7 @@
 * [Translations](/translations/#translations)
 * [Cron](/cron/#cron)
 * [Logger](/logger/#logger)
+* [Cli](/cli/#cli)
 * [Database](/database/#database)
   * [Connection](/database/#connection)
   * [Timeout](/database/#timeout)
