@@ -10,7 +10,10 @@ const colors = {
   reset: '\u001b[0m'
 }
 
+let modeValue
+
 program
+  .arguments('<mode>')
   .option('-p, --port <port>', 'Server port')
   .option('-c, --cluster <cluster>', 'Number of cluster')
   .option('-l, --lang <lang>', 'Default server lang')
@@ -20,11 +23,8 @@ program
   .option('--db_username <dbUsername>', 'Database username')
   .option('--db_password <dbPassword>', 'Database password')
   .description('Start server with debug')
-  .action((mode, options) => {
-    if (typeof mode === 'object') {
-      console.log('Invalid argument for debug command. Try dev, test or prod')
-      return process.exit(1)
-    }
+  .action(function (mode, options) {
+    modeValue = mode
 
     if (mode !== 'dev' && mode !== 'prod') {
       console.log(`Unknown mode ${mode}. Try with dev or prod.`)
@@ -71,3 +71,8 @@ program
     })
   })
   .parse(process.argv)
+
+if (typeof modeValue === 'undefined') {
+  console.error('You must specify mode `dev` or `prod`.')
+  process.exit(1)
+}

@@ -722,19 +722,19 @@ describe('Server', () => {
             for (let i = 0; i < _nbQueries; i++) {
               request.get('http://localhost:8080/user', callback)
             }
-          }, 200)
+          }, 400)
         }
 
         for (let i = 0; i < _nbQueries; i++) {
           // Crash server every 20 * 10ms
           if (i % 20 === 0) {
-            setTimeout(crash, 10 * i)
+            setTimeout(crash, 15 * i)
           } else {
-            setTimeout(sendRequest, 10 * i)
+            setTimeout(sendRequest, 15 * i)
           }
         }
       })
-    }).timeout(5000)
+    }).timeout(6000)
   })
 })
 

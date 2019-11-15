@@ -4,6 +4,7 @@ const translate = require('../translate')
 const helper = require('../helper')
 
 program
+  .arguments('[lang]')
   .option('-v, --verbose <level>', 'Active a verbosity level (0, 1, 2 or 3) (Default: 0)')
   .option('-d, --delete', 'Delete unused key (Default: false)')
   .option('-r, --recursive <active>', 'Parse recursively directories (Default: true)')
@@ -52,6 +53,7 @@ function callTranslate (lang, translateOptions) {
       process.exit(1)
     }
 
+    console.log('All files have been parsed')
     process.exit(0)
   })
 }

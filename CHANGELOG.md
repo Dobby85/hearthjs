@@ -1,5 +1,14 @@
 # HearthJS
 
+### v1.3.0
+- Update commander version from 3.0.1 to 4.0.1
+- Execute addons before middleware
+- Rework CLI
+- Fix bug when converting the result of a SQL request to a JSON object with date type
+- Fix migration name which gave a bad order
+- Add the possibility to update the header in client test request
+- Fix bug which throws an error when a test failed usint client test request
+
 ### v1.2.0
 - Watch following files when launching `./hearthjs test` command.
   - `/api/**/test/test.*.js`

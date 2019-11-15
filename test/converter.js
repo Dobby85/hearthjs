@@ -3,6 +3,56 @@ const converter = require('../lib/converter')
 const assert = require('assert')
 
 describe('Converter', () => {
+  it('should not duplicate object containing Date object', () => {
+    let model = [{
+      id: ['<<idproduct>>'],
+      dateCreated: ['<productdatecreated>'],
+      subtype: {
+        dateCreated: ['<subtypedatecreated>']
+      }
+    }]
+    let data = [ { idproduct: 1,
+      productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z')
+    },
+    { idproduct: 1,
+      productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+    },
+    { idproduct: 1,
+      productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+    },
+    { idproduct: 1,
+      productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+    },
+    { idproduct: 2,
+      productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+    },
+    { idproduct: 3,
+      productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+    } ]
+
+    let result = converter.sqlToJson(model, data)
+    assert.strictEqual(result.length, 3)
+    assert.deepStrictEqual(result, [{
+      id: 1,
+      dateCreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtype: { dateCreated: new Date('2014-03-21T23:00:00.000Z') }
+    }, {
+      id: 2,
+      dateCreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtype: { dateCreated: new Date('2014-03-21T23:00:00.000Z') }
+    }, {
+      id: 3,
+      dateCreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtype: { dateCreated: new Date('2014-03-21T23:00:00.000Z') }
+    }])
+  })
+
   it('should make a simple object conversion', () => {
     let model = ['object', {
       id: ['<<id>>'],
