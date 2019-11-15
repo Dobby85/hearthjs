@@ -11,5 +11,6 @@
   * [Add a cron](/cron/#add-a-cron)
   * [Manage crons](/cron/#manages-cron)
 * [Logger](/logger/#logger)
+* [Cli](/cli/#cli)
 * [Database](/database/#database)
 * [Tests](/tests/#tests)

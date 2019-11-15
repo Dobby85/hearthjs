@@ -10,5 +10,6 @@
 * [Translations](/translations/#translations)
 * [Cron](/cron/#cron)
 * [Logger](/logger/#logger)
+* [Cli](/cli/#cli)
 * [Database](/database/#database)
 * [Tests](/tests/#tests)

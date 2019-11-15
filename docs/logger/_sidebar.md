@@ -11,5 +11,6 @@
 * [Logger](/logger/#logger)
   * [Log message](/logger/#log-message)
   * [Debug message](/logger/#debug-message)
+* [Cli](/cli/#cli)
 * [Database](/database/#database)
 * [Tests](/tests/#tests)
