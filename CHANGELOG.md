@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.0.1
+- Can access express from hearthjs module
+
 ### v2.0.0
 - Add dynamic command
 
