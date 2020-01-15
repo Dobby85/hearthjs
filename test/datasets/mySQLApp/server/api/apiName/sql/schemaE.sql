@@ -1,5 +1,5 @@
 SELECT
-  {{ data.firstname}}::text as "firstname",
-  {{ data.lastname}}::text as "lastname",
-  {{ data.mail}}::text as "mail",
-  {{ data.age}}::int4 as "age"
+  {{ data.body.firstname}}::text as "firstname",
+  {{ data.body.lastname}}::text as "lastname",
+  {{ data.body.mail}}::text as "mail",
+  {{ data.body.age}}::int4 as "age"

@@ -136,6 +136,22 @@ Users:
 * Tom Benoit
 ```
 
+### Include
+
+You can include SQL files in another SQL file by using the following marker: `{->` and `<-}`.
+
+You have to passe the name of a SQL file which is registered when your server is starting.
+
+```sql
+WITH insert_value {
+  # Execute your insert here
+}
+
+{-> getValue <-}
+```
+
+This will execute the insert and then the SQL request which is in the `getValue.sql` file.
+
 ### Constant
 
 You can add pre-defined constant in your template. If you add an unknown constant, hearthjs will ignore it. You must use `{$` and `$}` to add a constant.

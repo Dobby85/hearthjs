@@ -433,7 +433,8 @@ describe('Server', () => {
 
   describe('API with SQL', () => {
     before((done) => {
-      app.run('test', path.join(__dirname, 'datasets', 'mySQLApp', 'server'), (err) => {
+      process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'mySQLApp', 'server')
+      app.run('test', process.env.HEARTH_SERVER_PATH, (err) => {
         if (err) {
           return done(err)
         }

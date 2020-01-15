@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 const mustache = require('../lib/mustache')
 const assert = require('assert')
+const path = require('path')
+const fsMock = require('file-mock')
 
 describe('Mustache', () => {
   describe('Parser', () => {
@@ -40,6 +42,12 @@ describe('Mustache', () => {
         let result = mustache.parse('Coucou {{   myVar:hard:oulaHard:nope}}:nope')
         assert.deepStrictEqual(result, expected)
       })
+    })
+
+    it('should tokenize an include', () => {
+      let expected = [['text', 'coucou '], ['include', 'getCard'], ['text', ' nope']]
+      let result = mustache.parse('coucou {-> getCard <-} nope')
+      assert.deepStrictEqual(result, expected)
     })
 
     it('should tokenize a condition', () => {
@@ -134,8 +142,18 @@ describe('Mustache', () => {
         assert.throws(func, SyntaxError)
       })
 
-      it('should throw an error when bad closing tag 3', () => {
+      it('should throw an error when bad closing tag 4', () => {
         const func = () => mustache.parse('Coucou {% myVar $}')
+        assert.throws(func, SyntaxError)
+      })
+
+      it('should throw an error when bad closing tag 5', () => {
+        const func = () => mustache.parse('Coucou {-> myVar $}')
+        assert.throws(func, SyntaxError)
+      })
+
+      it('should throw an error when bad closing tag 6', () => {
+        const func = () => mustache.parse('Coucou {{ myVar <-}')
         assert.throws(func, SyntaxError)
       })
 
@@ -159,6 +177,11 @@ describe('Mustache', () => {
         assert.throws(func, Error)
       })
 
+      it('should throw an error if all includes are not closed', () => {
+        const func = () => mustache.parse('Coucou {-> first <-} coucou {-> nope')
+        assert.throws(func, Error)
+      })
+
       describe('Can\'t open a variable if something else if open', () => {
         it('should throw an error when a variable is not closed and a new variable is being opening', () => {
           const func = () => mustache.parse('Coucou {{ myVar {{')
@@ -177,6 +200,11 @@ describe('Mustache', () => {
 
         it('should throw an error when a constant is not closed and a new variable is being opening', () => {
           const func = () => mustache.parse('Coucou {$ PRINT {{')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when an include is not closed and a new variable is being opening', () => {
+          const func = () => mustache.parse('Coucou {-> PRINT {{')
           assert.throws(func, SyntaxError)
         })
       })
@@ -201,6 +229,11 @@ describe('Mustache', () => {
           const func = () => mustache.parse('Coucou {$ ORDER BY {#')
           assert.throws(func, SyntaxError)
         })
+
+        it('should throw an error when an include is not closed and a new condition is being opening', () => {
+          const func = () => mustache.parse('Coucou {-> ORDER BY {#')
+          assert.throws(func, SyntaxError)
+        })
       })
 
       describe('Can\'t open a loop if something else if open', () => {
@@ -221,6 +254,11 @@ describe('Mustache', () => {
 
         it('should throw an error when a constant is not closed and a new loop is being opening', () => {
           const func = () => mustache.parse('Coucou {$ PRINT {%')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when an include is not closed and a new loop is being opening', () => {
+          const func = () => mustache.parse('Coucou {-> PRINT {%')
           assert.throws(func, SyntaxError)
         })
       })
@@ -245,6 +283,38 @@ describe('Mustache', () => {
           const func = () => mustache.parse('Coucou {$ PRINT {$')
           assert.throws(func, SyntaxError)
         })
+
+        it('should throw an error when an include is not closed and a new constant is being opening', () => {
+          const func = () => mustache.parse('Coucou {-> PRINT {$')
+          assert.throws(func, SyntaxError)
+        })
+      })
+
+      describe('Can\'t open an include if something else if open', () => {
+        it('should throw an error when a variable is not closed and an include is being opening', () => {
+          const func = () => mustache.parse('Coucou {{ myVar {->')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when a condition is not closed and an include is being opening', () => {
+          const func = () => mustache.parse('Coucou {# myVar {->')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when a loop is not closed and an include is being opening', () => {
+          const func = () => mustache.parse('Coucou {% myVar {->')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when a constant is not closed and an include is being opening', () => {
+          const func = () => mustache.parse('Coucou {$ PRINT {->')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when an include is not closed and an include is being opening', () => {
+          const func = () => mustache.parse('Coucou {-> PRINT {->')
+          assert.throws(func, SyntaxError)
+        })
       })
 
       describe('Check a tag has been open when a closing tag is encountered', () => {
@@ -265,6 +335,11 @@ describe('Mustache', () => {
 
         it('should throw an error when a constant closing tag is encountered and not opening', () => {
           const func = () => mustache.parse('Coucou $}')
+          assert.throws(func, SyntaxError)
+        })
+
+        it('should throw an error when an include closing tag is encountered and not opening', () => {
+          const func = () => mustache.parse('Coucou <-}')
           assert.throws(func, SyntaxError)
         })
       })
@@ -294,64 +369,191 @@ describe('Mustache', () => {
   })
 
   describe('Render', () => {
-    it('should render simple variables', () => {
+    it('should render simple variables', (done) => {
       let data = {
         firstname: 'John',
         lastname: 'Doe'
       }
-      let result = mustache.render('Coucou {{ data.firstname }} {{ data.lastname }}', data)
-
-      let expected = {
-        string: 'Coucou $1 $2',
-        data: ['John', 'Doe']
-      }
-      assert.deepStrictEqual(result, expected)
+      mustache.render('Coucou {{ data.firstname }} {{ data.lastname }}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
+        let expected = {
+          string: 'Coucou $1 $2',
+          data: ['John', 'Doe']
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
-    it('should render constant', () => {
+    it('should render constant', (done) => {
       let data = {
         firstname: 'John',
         lastname: 'Doe'
       }
-      let result = mustache.render('{$ PRINT $}Coucou {{ data.firstname }} {{ data.lastname }}', data)
+      mustache.render('{$ PRINT $}Coucou {{ data.firstname }} {{ data.lastname }}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
 
-      let expected = {
-        print: true,
-        string: 'Coucou $1 $2',
-        data: ['John', 'Doe']
-      }
-      assert.deepStrictEqual(result, expected)
+        let expected = {
+          print: true,
+          string: 'Coucou $1 $2',
+          data: ['John', 'Doe']
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
-    it('should not crash if same constant is render multiple times', () => {
+    it('should not crash if same constant is render multiple times', (done) => {
       let data = {
         firstname: 'John'
       }
-      let result = mustache.render('{$ PRINT $}Coucou {{ data.firstname }}{$PRINT$}{$    PRINT   $}', data)
-
-      let expected = {
-        print: true,
-        string: 'Coucou $1',
-        data: ['John']
-      }
-      assert.deepStrictEqual(result, expected)
+      mustache.render('{$ PRINT $}Coucou {{ data.firstname }}{$PRINT$}{$    PRINT   $}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
+        let expected = {
+          print: true,
+          string: 'Coucou $1',
+          data: ['John']
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
-    it('should render a condition', () => {
+    it('should render a condition', (done) => {
       let data = {
         age: 18
       }
-      let result = mustache.render('{# data.age >= 18 #}Je suis {$PRINT$}majeur, {{ data.age }} ans{{#}}{# data.age < 18 #}Je suis mineur, {{ data.age }} ans{{#}}', data)
-
-      let expected = {
-        print: true,
-        string: 'Je suis majeur, $1 ans',
-        data: [18]
-      }
-      assert.deepStrictEqual(result, expected)
+      mustache.render('{# data.age >= 18 #}Je suis {$PRINT$}majeur, {{ data.age }} ans{{#}}{# data.age < 18 #}Je suis mineur, {{ data.age }} ans{{#}}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
+        let expected = {
+          print: true,
+          string: 'Je suis majeur, $1 ans',
+          data: [18]
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
-    it('should render a loop', () => {
+    describe('Render includes', () => {
+      beforeEach(() => {
+        fsMock.mock({
+          'test/datasets': {
+            'getCard.sql': 'Hello, Im {{ data.age }}',
+            'loopInclude.sql': '{% data.names[i].values %} v: {{ data.names[i].values[j] }} {{%}}'
+          }
+        })
+      })
+
+      afterEach(() => {
+        fsMock.restore()
+      })
+
+      it('should render an include', (done) => {
+        let sqlFiles = {
+          getCard: path.join(__dirname, 'datasets', 'getCard.sql')
+        }
+        let data = {
+          firstname: 'toto',
+          lastname: 'dupont',
+          age: 18
+        }
+        mustache.render('{{ data.firstname }} {{ data.lastname }} {-> getCard <-}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 $2 Hello, Im $3',
+            data: ['toto', 'dupont', 18]
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
+      })
+
+      it('should render multiple include', (done) => {
+        let sqlFiles = {
+          getCard: path.join(__dirname, 'datasets', 'getCard.sql')
+        }
+        let data = {
+          firstname: 'toto',
+          lastname: 'dupont',
+          age: 18
+        }
+        mustache.render('{-> getCard <-} {-> getCard <-} {-> getCard <-}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: 'Hello, Im $1 Hello, Im $2 Hello, Im $3',
+            data: [18, 18, 18]
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
+      })
+
+      it('should render multiple include', (done) => {
+        let sqlFiles = {
+          getCard: path.join(__dirname, 'datasets', 'getCard.sql')
+        }
+        let data = {
+          firstname: 'toto',
+          lastname: 'dupont',
+          age: 18
+        }
+        mustache.render('{{ data.firstname }} {-> getCard <-} {{ data.firstname }} {-> getCard <-} {{ data.firstname }}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 Hello, Im $2 $3 Hello, Im $4 $5',
+            data: ['toto', 18, 'toto', 18, 'toto']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
+      })
+
+      it('should render include with loops', (done) => {
+        let sqlFiles = {
+          loopInclude: path.join(__dirname, 'datasets', 'loopInclude.sql')
+        }
+        let data = {
+          names: [{
+            name: 'toto',
+            values: [1, 2, 3]
+          }, {
+            name: 'tata',
+            values: [4, 5, 6]
+          }, {
+            name: 'titi',
+            values: [7, 8, 9]
+          }]
+        }
+        mustache.render('{% data.names %} name: {{ data.names[i].name }} {-> loopInclude <-} {{%}}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: ' name: $1  v: $2  v: $3  v: $4   name: $5  v: $6  v: $7  v: $8   name: $9  v: $10  v: $11  v: $12  ',
+            data: ['toto', 1, 2, 3, 'tata', 4, 5, 6, 'titi', 7, 8, 9]
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
+      })
+    })
+
+    it('should render a loop', (done) => {
       let data = {
         names: [
           'John',
@@ -359,17 +561,21 @@ describe('Mustache', () => {
           'Cre'
         ]
       }
-      let result = mustache.render('{% data.names %} * {{ data.names[i] }}{$PRINT$}{{%}}', data)
-
-      let expected = {
-        print: true,
-        string: ' * $1 * $2 * $3',
-        data: ['John', 'Max', 'Cre']
-      }
-      assert.deepStrictEqual(result, expected)
+      mustache.render('{% data.names %} * {{ data.names[i] }}{$PRINT$}{{%}}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
+        let expected = {
+          print: true,
+          string: ' * $1 * $2 * $3',
+          data: ['John', 'Max', 'Cre']
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
-    it('should render a loop with condition', () => {
+    it('should render a loop with condition', (done) => {
       let data = {
         names: [
           'John',
@@ -377,16 +583,20 @@ describe('Mustache', () => {
           'Cre'
         ]
       }
-      let result = mustache.render('{% data.names %}{{ data.names[i] }}{# data.names[i+1] !== undefined #}, {{#}}{{%}}', data)
-
-      let expected = {
-        string: '$1, $2, $3',
-        data: ['John', 'Max', 'Cre']
-      }
-      assert.deepStrictEqual(result, expected)
+      mustache.render('{% data.names %}{{ data.names[i] }}{# data.names[i+1] !== undefined #}, {{#}}{{%}}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
+        let expected = {
+          string: '$1, $2, $3',
+          data: ['John', 'Max', 'Cre']
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
-    it('should render a loop in a loop', () => {
+    it('should render a loop in a loop', (done) => {
       let data = {
         persons: [{
           age: 18,
@@ -396,85 +606,112 @@ describe('Mustache', () => {
           names: ['John', 'Leo']
         }]
       }
-      let result = mustache.render('{% data.persons %}{{ data.persons[i].age }} |{% data.persons[i].names %} {{ data.persons[i].names[j] }}{{%}}{{%}}', data)
-
-      let expected = {
-        string: '$1 | $2 $3$4 | $5 $6',
-        data: [18, 'Cre', 'Patrick', 16, 'John', 'Leo']
-      }
-      assert.deepStrictEqual(result, expected)
+      mustache.render('{% data.persons %}{{ data.persons[i].age }} |{% data.persons[i].names %} {{ data.persons[i].names[j] }}{{%}}{{%}}', data, (err, result) => {
+        delete result.varIndex
+        delete result.loopIndexes
+        assert.strictEqual(err, null)
+        let expected = {
+          string: '$1 | $2 $3$4 | $5 $6',
+          data: [18, 'Cre', 'Patrick', 16, 'John', 'Leo']
+        }
+        assert.deepStrictEqual(result, expected)
+        done()
+      })
     })
 
     describe('Hard replace', () => {
-      it('should replace data directly', () => {
+      it('should replace data directly', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe'
         }
-        let result = mustache.render('{{ data.firstname:hard }} {{ data.lastname:hard }}', data)
-
-        let expected = {
-          string: 'John Doe',
-          data: []
-        }
-        assert.deepStrictEqual(result, expected)
+        mustache.render('{{ data.firstname:hard }} {{ data.lastname:hard }}', data, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: 'John Doe',
+            data: []
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
 
-      it('should replace data directly only with hard extra token', () => {
+      it('should replace data directly only with hard extra token', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe'
         }
-        let result = mustache.render('{{ data.firstname:hard }} {{ data.lastname }}', data)
-
-        let expected = {
-          string: 'John $1',
-          data: ['Doe']
-        }
-        assert.deepStrictEqual(result, expected)
+        mustache.render('{{ data.firstname:hard }} {{ data.lastname }}', data, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: 'John $1',
+            data: ['Doe']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
     })
 
     describe('Print', () => {
-      it('should return print = true', () => {
-        let result = mustache.render('Coucou {$ PRINT $}', {})
-        assert.deepStrictEqual(result, {
-          print: true,
-          string: 'Coucou ',
-          data: []
+      it('should return print = true', (done) => {
+        mustache.render('Coucou {$ PRINT $}', {}, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          assert.deepStrictEqual(result, {
+            print: true,
+            string: 'Coucou ',
+            data: []
+          })
+          done()
         })
       })
 
-      it('should return print = true', () => {
+      it('should return print = true', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe',
           where: true,
           id: 2
         }
-        let result = mustache.render('{$ PRINT $}SELECT{{ data.firstname}}::text as "firstname",{{ data.lastname}}::text as "lastname"{# data.where #}WHERE 1 = {{ data.id }}{{#}}', data)
-        assert.deepStrictEqual(result, {
-          string: 'SELECT$1::text as "firstname",$2::text as "lastname"WHERE 1 = $3',
-          print: true,
-          data: ['John', 'Doe', 2]
+        mustache.render('{$ PRINT $}SELECT{{ data.firstname}}::text as "firstname",{{ data.lastname}}::text as "lastname"{# data.where #}WHERE 1 = {{ data.id }}{{#}}', data, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          assert.deepStrictEqual(result, {
+            string: 'SELECT$1::text as "firstname",$2::text as "lastname"WHERE 1 = $3',
+            print: true,
+            data: ['John', 'Doe', 2]
+          })
+          done()
         })
       })
 
-      it('should return print = true', () => {
+      it('should return print = true', (done) => {
         let data = {
           lines: ['one', 'two', 'three']
         }
-        let result = mustache.render('{$ PRINT $}{% data.lines %}{{data.lines[i]}}{{%}}', data)
-        assert.deepStrictEqual(result, {
-          string: '$1$2$3',
-          print: true,
-          data: ['one', 'two', 'three']
+        mustache.render('{$ PRINT $}{% data.lines %}{{data.lines[i]}}{{%}}', data, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          assert.deepStrictEqual(result, {
+            string: '$1$2$3',
+            print: true,
+            data: ['one', 'two', 'three']
+          })
+          done()
         })
       })
     })
 
     describe('Order by', () => {
-      it('should render order by with model PK', () => {
+      it('should render order by with model PK', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe'
@@ -485,30 +722,38 @@ describe('Mustache', () => {
             id: ['<<idUser>>']
           }]
         }]
-        let result = mustache.render('{{ data.firstname }} {{ data.lastname }}{$  ORDER BY $}', data, model)
-
-        let expected = {
-          string: '$1 $2ORDER BY "idAccount", "idUser"',
-          data: ['John', 'Doe']
-        }
-        assert.deepStrictEqual(result, expected)
+        mustache.render('{{ data.firstname }} {{ data.lastname }}{$  ORDER BY $}', data, model, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 $2ORDER BY "idAccount", "idUser"',
+            data: ['John', 'Doe']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
 
-      it('should ignore order by if model is undefined', () => {
+      it('should ignore order by if model is undefined', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe'
         }
-        let result = mustache.render('{{ data.firstname }} {{ data.lastname }}{$  ORDER BY $}', data)
-
-        let expected = {
-          string: '$1 $2',
-          data: ['John', 'Doe']
-        }
-        assert.deepStrictEqual(result, expected)
+        mustache.render('{{ data.firstname }} {{ data.lastname }}{$  ORDER BY $}', data, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 $2',
+            data: ['John', 'Doe']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
 
-      it('should ignore order by if there is no PK', () => {
+      it('should ignore order by if there is no PK', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe'
@@ -517,16 +762,20 @@ describe('Mustache', () => {
           firstname: ['<firstname>'],
           lastname: ['<lastname>']
         }]
-        let result = mustache.render('{{ data.firstname }} {{ data.lastname }}{$  ORDER BY $}', data, model)
-
-        let expected = {
-          string: '$1 $2',
-          data: ['John', 'Doe']
-        }
-        assert.deepStrictEqual(result, expected)
+        mustache.render('{{ data.firstname }} {{ data.lastname }}{$  ORDER BY $}', data, model, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 $2',
+            data: ['John', 'Doe']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
 
-      it('should render order by at the right place', () => {
+      it('should render order by at the right place', (done) => {
         let data = {
           firstname: 'John',
           lastname: 'Doe'
@@ -537,47 +786,59 @@ describe('Mustache', () => {
             id: ['<<idUser>>']
           }]
         }]
-        let result = mustache.render('lala{{ data.firstname }} {$  ORDER BY  $} {{ data.lastname }}lala', data, model)
-
-        let expected = {
-          string: 'lala$1 ORDER BY "idAccount", "idUser" $2lala',
-          data: ['John', 'Doe']
-        }
-        assert.deepStrictEqual(result, expected)
+        mustache.render('lala{{ data.firstname }} {$  ORDER BY  $} {{ data.lastname }}lala', data, model, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: 'lala$1 ORDER BY "idAccount", "idUser" $2lala',
+            data: ['John', 'Doe']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
     })
 
     describe('Errors', () => {
-      it('should throw an error when extra is unknown', () => {
+      it('should throw an error when extra is unknown', (done) => {
         let data = {
           name: 'John'
         }
-        let func = () => mustache.render('Coucou {{ name:oups }}', data)
-        assert.throws(func, Error)
+        mustache.render('Coucou {{ name:oups }}', data, (err) => {
+          assert.notStrictEqual(err, null)
+          done()
+        })
       })
 
-      it('should throw an error when eval of a variable does not work', () => {
+      it('should throw an error when eval of a variable does not work', (done) => {
         let data = {
           name: 'John'
         }
-        let func = () => mustache.render('Coucou {{ name }}', data)
-        assert.throws(func, Error)
+        mustache.render('Coucou {{ name }}', data, (err) => {
+          assert.notStrictEqual(err, null)
+          done()
+        })
       })
 
-      it('should throw an error when eval of a bad array does not work', () => {
+      it('should throw an error when eval of a bad array does not work', (done) => {
         let data = {
           names: 4
         }
-        let func = () => mustache.render('Coucou {% data.names %}{{%}}', data)
-        assert.throws(func, Error)
+        mustache.render('Coucou {% data.names %}{{%}}', data, (err) => {
+          assert.notStrictEqual(err, null)
+          done()
+        })
       })
 
-      it('should throw an error when eval of a bad conditions does not work', () => {
+      it('should throw an error when eval of a bad conditions does not work', (done) => {
         let data = {
           names: 4
         }
-        let func = () => mustache.render('Coucou {# koko < kiki #}{{#}}', data)
-        assert.throws(func, Error)
+        mustache.render('Coucou {# koko < kiki #}{{#}}', data, (err) => {
+          assert.notStrictEqual(err, null)
+          done()
+        })
       })
     })
   })
