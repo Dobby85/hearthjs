@@ -349,7 +349,7 @@ describe('Logger', () => {
         assert.strictEqual(fs.existsSync(path.join(_logDirectory, '07-27-2019.log')), true)
         assert.strictEqual(fs.existsSync(path.join(_logDirectory, '07-26-2019.log')), true)
         assert.strictEqual(fs.existsSync(path.join(_logDirectory, '07-25-2019.log')), true)
-        assert.strictEqual(fs.existsSync(path.join(_logDirectory, '07-24-2019.log')), true)
+        assert.strictEqual(fs.existsSync(path.join(_logDirectory, '07-24-2019.log')), false)
         assert.strictEqual(fs.existsSync(path.join(_logDirectory, '07-23-2019.log')), false)
         assert.strictEqual(fs.existsSync(path.join(_logDirectory, '06-01-2019.log')), false)
         done()

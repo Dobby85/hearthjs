@@ -1,5 +1,11 @@
 # HearthJS
 
+### v2.2.0
+- Correct bugs with log file deletion
+- Can call `exec` and `query` function of the database with promise
+- Can access the env (test, dev or prod) with `hearthjs.env`
+- Correct bugs
+
 ### v2.1.0
 - Add the possibility to include SQL file in another SQL file
 - Add genericQueue in helpers

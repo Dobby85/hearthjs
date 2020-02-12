@@ -2,6 +2,8 @@
 const db = require('../lib/database')
 const assert = require('assert')
 const path = require('path')
+const fs = require('fs')
+const logger = require('../lib/logger')
 
 const host = 'localhost'
 const password = 'password'
@@ -10,7 +12,18 @@ const database = 'hearth_test'
 const port = 5432
 
 describe('Database', () => {
+  before(() => {
+    process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
+  })
+
   after((done) => {
+    const _logFile = path.join(__dirname, 'datasets', 'myApp', 'server', 'logs', `${logger._getCurrentDateTime(false)}.log`)
+
+    if (fs.existsSync(_logFile)) {
+      fs.unlinkSync(_logFile)
+    }
+
+    delete process.env.HEARTH_SERVER_PATH
     delete process.env.APP_DATABASE_NAME
     done()
   })
@@ -189,11 +202,25 @@ describe('Database', () => {
       })
     })
 
+    it('should exec file1 without params with promise', async () => {
+      let { object } = await db.exec('file1')
+      assert.strictEqual(object[0].number, 1)
+    })
+
     it('should not exec an unknown SQL template', (done) => {
       db.exec('unknown', (err, res, rows) => {
         assert.notStrictEqual(err, null)
         done()
       })
+    })
+
+    it('should not exec an unknown SQL template with promise', async () => {
+      try {
+        await db.exec('unknown')
+        assert.strictEqual(1, 2)
+      } catch (e) {
+        assert.notStrictEqual(e, null)
+      }
     })
 
     it('should return SQL error', (done) => {
@@ -213,6 +240,11 @@ describe('Database', () => {
           done()
         })
       })
+    })
+
+    it('should exec SQL template with params with promise', async () => {
+      let { object } = await db.exec('file3', { id: 1 })
+      assert.strictEqual(object[0].str, 'Hello')
     })
 
     it('should exec a complex SQL file', (done) => {
@@ -282,6 +314,11 @@ describe('Database', () => {
       })
     })
 
+    it('should execute a SQL query with promise', async () => {
+      let { rows } = await db.query('SELECT 1 AS number;')
+      assert.strictEqual(rows[0].number, 1)
+    })
+
     it('should return an error', (done) => {
       db.query('SELECT "name" FROM "unknown";', (err, res, rows) => {
         assert.notStrictEqual(err, null)
@@ -289,6 +326,15 @@ describe('Database', () => {
         assert.strictEqual(rows.length, 0)
         done()
       })
+    })
+
+    it('should return an error with promise', async () => {
+      try {
+        await db.query('SELECT "name" FROM "unknown";')
+        assert.strictEqual(1, 2)
+      } catch (e) {
+        assert.notStrictEqual(e, null)
+      }
     })
 
     it('should execute 10 SQL queries', (done) => {

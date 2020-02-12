@@ -17,23 +17,23 @@ describe('Converter', () => {
     },
     { idproduct: 1,
       productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
-      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z')
     },
     { idproduct: 1,
       productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
-      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z')
     },
     { idproduct: 1,
       productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
-      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z')
     },
     { idproduct: 2,
       productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
-      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z')
     },
     { idproduct: 3,
       productdatecreated: new Date('2014-03-21T23:00:00.000Z'),
-      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z'),
+      subtypedatecreated: new Date('2014-03-21T23:00:00.000Z')
     } ]
 
     let result = converter.sqlToJson(model, data)
@@ -115,6 +115,23 @@ describe('Converter', () => {
     }])
   })
 
+  it('should not push object with only null values', () => {
+    let model = [{
+      id: ['<<id>>'],
+      name: ['<name>']
+    }]
+    let data = [{ id: 1, name: 'A1' }, { id: 2, name: null }, { id: null, name: null }]
+
+    let result = converter.sqlToJson(model, data)
+    assert.deepStrictEqual(result, [{
+      id: 1,
+      name: 'A1'
+    }, {
+      id: 2,
+      name: null
+    }])
+  })
+
   it('should make conversion of an array in another array', () => {
     let model = ['array', {
       id: ['<<idAccount>>'],
@@ -139,6 +156,46 @@ describe('Converter', () => {
       name: 'A2',
       users: [{ id: 4, mail: 'b.a' }, { id: 5, mail: 'b.b' }]
     }])
+  })
+
+  it('should push zero object in sub array if all users are null', () => {
+    let model = ['array', {
+      id: ['<<idAccount>>'],
+      name: ['<name>'],
+      users: ['array', {
+        id: ['<<idUser>>'],
+        mail: ['<mail>']
+      }]
+    }]
+    let data = [{ name: 'A1', idAccount: 1, mail: null, idUser: null },
+      { name: 'A1', idAccount: 1, mail: null, idUser: null },
+      { name: 'A1', idAccount: 1, mail: null, idUser: null },
+      { name: 'A2', idAccount: 2, mail: null, idUser: null },
+      { name: 'A2', idAccount: 2, mail: null, idUser: null }]
+    let result = converter.sqlToJson(model, data)
+    assert.deepStrictEqual(result, [{
+      id: 1,
+      name: 'A1',
+      users: []
+    }, {
+      id: 2,
+      name: 'A2',
+      users: []
+    }])
+  })
+
+  it('should push zero values in first array if everything is null', () => {
+    let model = ['array', {
+      id: ['<<idAccount>>'],
+      name: ['<name>'],
+      users: ['array', {
+        id: ['<<idUser>>'],
+        mail: ['<mail>']
+      }]
+    }]
+    let data = [{ name: null, idAccount: null, mail: null, idUser: null }]
+    let result = converter.sqlToJson(model, data)
+    assert.deepStrictEqual(result, [])
   })
 
   it('should make conversion of an undetails array in another undetails array', () => {

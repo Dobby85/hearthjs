@@ -38,6 +38,16 @@ hearthjs.db.query('SELECT 1 AS number', (err, result, rows) => {
 })
 ```
 
+You can also use the promise version of the `query` function.
+
+```js
+hearthjs.db.query('SELECT 1 AS number', []).then(({ result, rows }) => {
+
+}).catch((err) => {
+
+})
+```
+
 ### Migration
 
 Hearthjs has its own migration system. It must be used with the CLI.
@@ -149,6 +159,16 @@ let model = ['array', {
 
 // Second parameter is optional here too
 hearthjs.db.exec('selectUsers', {}, model, (err, result, formattedResult) => {
+
+})
+```
+
+You can also use the promise version of the `exec` function.
+
+```js
+hearthjs.db.exec('register', {}, model).then(({ result, object }) => {
+
+}).catch((err) => {
 
 })
 ```

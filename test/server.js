@@ -443,6 +443,11 @@ describe('Server', () => {
     })
 
     after((done) => {
+      const _logFile = path.join(__dirname, 'datasets', 'mySQLApp', 'server', 'logs', `${logger._getCurrentDateTime(false)}.log`)
+
+      if (fs.existsSync(_logFile)) {
+        fs.unlinkSync(_logFile)
+      }
       app.close(done)
     })
 

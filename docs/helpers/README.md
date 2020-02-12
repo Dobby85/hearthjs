@@ -1,5 +1,15 @@
 ## Helpers
 
+### Access environment mode
+
+You can access easily the current environment mode with hearthjs.
+
+```js
+const hearthjs = require('hearthjs')
+
+console.log(hearthjs.env) // Display test, dev or prod
+```
+
 ### Generic queue
 
 You know calling a callback in a loop is not a good idea and you have to create recursive function to loop on your array. This time is done. Now you can use a `genericQueue`!
