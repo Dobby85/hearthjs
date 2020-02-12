@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.2.1
+- Add a helper to handle async/await error
+
 ### v2.2.0
 - Correct bugs with log file deletion
 - Can call `exec` and `query` function of the database with promise

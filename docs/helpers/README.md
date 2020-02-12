@@ -10,6 +10,27 @@ const hearthjs = require('hearthjs')
 console.log(hearthjs.env) // Display test, dev or prod
 ```
 
+### Handle promise error
+
+Hearthjs has a little function which permit you to handle async/await error easily.
+
+```js
+const hearthjs = require('hearthjs')
+const handle = hearthjs.helpers.handlePromiseError
+
+let promiseFunc = // A promise function
+
+let { error, data } = handle(promiseFunc)
+
+if (error) {
+  // Handle error here
+}
+
+// No error, you can access data
+```
+
+With this function you don't need to add a `try catch` for all your promises. And you can always know from which function the error is coming from.
+
 ### Generic queue
 
 You know calling a callback in a loop is not a good idea and you have to create recursive function to loop on your array. This time is done. Now you can use a `genericQueue`!
