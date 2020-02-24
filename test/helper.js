@@ -9,9 +9,9 @@ describe('Helper', () => {
         return reject(new Error('Error with promise'))
       })
 
-      let { error, data } = await helper.handlePromiseError(promise)
+      let [error, data] = await helper.handlePromiseError(promise)
       assert.strictEqual(error.message, 'Error with promise')
-      assert.strictEqual(data, undefined)
+      assert.strictEqual(data, null)
     })
 
     it('should return the result of the promise', async () => {
@@ -19,8 +19,8 @@ describe('Helper', () => {
         return resolve({ id: 1 })
       })
 
-      let { error, data } = await helper.handlePromiseError(promise)
-      assert.strictEqual(error, undefined)
+      let [error, data] = await helper.handlePromiseError(promise)
+      assert.strictEqual(error, null)
       assert.deepStrictEqual(data, { id: 1 })
     })
   })

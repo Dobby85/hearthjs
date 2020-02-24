@@ -45,8 +45,20 @@ describe('Mustache', () => {
     })
 
     it('should tokenize an include', () => {
-      let expected = [['text', 'coucou '], ['include', 'getCard'], ['text', ' nope']]
+      let expected = [['text', 'coucou '], ['include', 'getCard', []], ['text', ' nope']]
       let result = mustache.parse('coucou {-> getCard <-} nope')
+      assert.deepStrictEqual(result, expected)
+    })
+
+    it('should tokenize an include with params', () => {
+      let expected = [['text', 'coucou '], ['include', 'getCard', ['data.body.where']], ['text', ' nope']]
+      let result = mustache.parse('coucou {-> getCard(data.body.where) <-} nope')
+      assert.deepStrictEqual(result, expected)
+    })
+
+    it('should tokenize an include with multiple params', () => {
+      let expected = [['text', 'coucou '], ['include', 'getCard', ['data.body.where', 'data.test', 'data.here']], ['text', ' nope']]
+      let result = mustache.parse('coucou {-> getCard(data.body.where, data.test    ,   data.here) <-} nope')
       assert.deepStrictEqual(result, expected)
     })
 
@@ -368,6 +380,42 @@ describe('Mustache', () => {
     })
   })
 
+  describe('Split params', () => {
+    it('should return an array of params', () => {
+      let expected = { name: 'getCard', params: ['req.body.where', 'req.body', 'req.test'] }
+      let result = mustache._splitFunctionParams('getCard(req.body.where, req.body, req.test)')
+      assert.deepStrictEqual(result, expected)
+    })
+
+    it('should return an array of params with spaces', () => {
+      let expected = { name: 'getCard', params: ['req.body.where', 'req.body', 'req.test'] }
+      let result = mustache._splitFunctionParams('    getCard     (        req.body.where       ,   req.body      ,req.test   )')
+      assert.deepStrictEqual(result, expected)
+    })
+
+    it('should return an empty array if no params are passed', () => {
+      let expected = { name: 'getCard', params: [] }
+      let result = mustache._splitFunctionParams('getCard()')
+      assert.deepStrictEqual(result, expected)
+    })
+
+    it('should return an empty array if no parenthesis exists', () => {
+      let expected = { name: 'getCard', params: [] }
+      let result = mustache._splitFunctionParams('getCard')
+      assert.deepStrictEqual(result, expected)
+    })
+
+    it('should return an array of params with spaces', () => {
+      const func = () => mustache._splitFunctionParams('getCard(req.body, )')
+      assert.throws(func, SyntaxError)
+    })
+
+    it('should throw an error if value has a bad syntax', () => {
+      const func = () => mustache._splitFunctionParams('getCard)req.body, (')
+      assert.throws(func, SyntaxError)
+    })
+  })
+
   describe('Render', () => {
     it('should render simple variables', (done) => {
       let data = {
@@ -448,7 +496,8 @@ describe('Mustache', () => {
         fsMock.mock({
           'test/datasets': {
             'getCard.sql': 'Hello, Im {{ data.age }}',
-            'loopInclude.sql': '{% data.names[i].values %} v: {{ data.names[i].values[j] }} {{%}}'
+            'loopInclude.sql': '{% data.names[i].values %} v: {{ data.names[i].values[j] }} {{%}}',
+            'params.sql': 'Params: {{ data.params[0] }}, {{ data.params[1] }}, {{ data.params[2] }}'
           }
         })
       })
@@ -473,6 +522,52 @@ describe('Mustache', () => {
           let expected = {
             string: '$1 $2 Hello, Im $3',
             data: ['toto', 'dupont', 18]
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
+      })
+
+      it('should render an include with empty parenthesis', (done) => {
+        let sqlFiles = {
+          getCard: path.join(__dirname, 'datasets', 'getCard.sql')
+        }
+        let data = {
+          firstname: 'toto',
+          lastname: 'dupont',
+          age: 18
+        }
+        mustache.render('{{ data.firstname }} {{ data.lastname }} {-> getCard() <-}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 $2 Hello, Im $3',
+            data: ['toto', 'dupont', 18]
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
+      })
+
+      it('should render an include with params', (done) => {
+        let sqlFiles = {
+          params: path.join(__dirname, 'datasets', 'params.sql')
+        }
+        let data = {
+          firstname: 'toto',
+          lastname: 'dupont',
+          age: 18,
+          size: 180,
+          pseudo: 'Dobby'
+        }
+        mustache.render('{{ data.firstname }} {{ data.lastname }} {-> params(data.age, data.size, data.pseudo) <-}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 $2 Params: $3, $4, $5',
+            data: ['toto', 'dupont', 18, 180, 'Dobby']
           }
           assert.deepStrictEqual(result, expected)
           done()

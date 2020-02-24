@@ -1,5 +1,9 @@
 # HearthJS
 
+### v2.3.0
+- Update returned result of database `exec` and `query` promise function, return an array now
+- Can pass parameter to SQL includes
+
 ### v2.2.1
 - Add a helper to handle async/await error
 

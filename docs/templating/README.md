@@ -152,6 +152,24 @@ WITH insert_value {
 
 This will execute the insert and then the SQL request which is in the `getValue.sql` file.
 
+#### Parameters
+
+You can also send parameters to your includes.
+
+```sql
+-- toInclude.sql
+SELECT {{ data.params[0] }}, {{ data.params[1]}}
+```
+
+```sql
+-- test.sql
+{-> toInclude(data.body.firstname, data.body.lastname) <-}
+```
+
+In file `toInclude.sql`, value of `data.params[0]` will be `data.firstname` and value of `data.params[1]` will be `data.lastname`
+
+*You send an unlimited number of parameter*
+
 ### Constant
 
 You can add pre-defined constant in your template. If you add an unknown constant, hearthjs will ignore it. You must use `{$` and `$}` to add a constant.
