@@ -1,5 +1,10 @@
 # HearthJS
 
+### v2.4.0
+- Correct bugs
+- Can add force and yes option to migrate command
+- Improve converter
+
 ### v2.3.0
 - Update returned result of database `exec` and `query` promise function, return an array now
 - Can pass parameter to SQL includes

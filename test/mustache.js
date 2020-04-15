@@ -497,7 +497,7 @@ describe('Mustache', () => {
           'test/datasets': {
             'getCard.sql': 'Hello, Im {{ data.age }}',
             'loopInclude.sql': '{% data.names[i].values %} v: {{ data.names[i].values[j] }} {{%}}',
-            'params.sql': 'Params: {{ data.params[0] }}, {{ data.params[1] }}, {{ data.params[2] }}'
+            'params.sql': 'Params: {{ data.parameters[0] }}, {{ data.parameters[1] }}, {{ data.parameters[2] }}'
           }
         })
       })
@@ -562,9 +562,9 @@ describe('Mustache', () => {
           pseudo: 'Dobby'
         }
         mustache.render('{{ data.firstname }} {{ data.lastname }} {-> params(data.age, data.size, data.pseudo) <-}', data, {}, sqlFiles, (err, result) => {
+          assert.strictEqual(err, null)
           delete result.varIndex
           delete result.loopIndexes
-          assert.strictEqual(err, null)
           let expected = {
             string: '$1 $2 Params: $3, $4, $5',
             data: ['toto', 'dupont', 18, 180, 'Dobby']

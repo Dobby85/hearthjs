@@ -3,6 +3,25 @@ const converter = require('../lib/converter')
 const assert = require('assert')
 
 describe('Converter', () => {
+  it('should set right data when using UNION in query', () => {
+    let model = {
+      id: ['<idproduct>'],
+      value: ['<value>']
+    }
+    let data = [ { idproduct: 1,
+      value: null
+    },
+    { idproduct: null,
+      value: 5
+    } ]
+
+    let result = converter.sqlToJson(model, data)
+    assert.deepStrictEqual(result, {
+      id: 1,
+      value: 5
+    })
+  })
+
   it('should not duplicate object containing Date object', () => {
     let model = [{
       id: ['<<idproduct>>'],
@@ -456,6 +475,114 @@ describe('Converter', () => {
         relations: [{ id: 1, mail: 'a.a' }]
       }]
     }])
+  })
+
+  describe('Check all field are null or empty', () => {
+    it('should find only empty field in object', () => {
+      let obj = {
+        label1: null,
+        label2: null
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, true)
+    })
+
+    it('should return false if a date is in object', () => {
+      let obj = {
+        label1: new Date('2014-03-21T23:00:00.000Z'),
+        label2: null
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, false)
+    })
+
+    it('should return false if a number is in object', () => {
+      let obj = {
+        label1: 2,
+        label2: null
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, false)
+    })
+
+    it('should find only empty field in object with array and object', () => {
+      let obj = {
+        label1: null,
+        label2: null,
+        arr: [],
+        obj: {}
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, true)
+    })
+
+    it('should find only empty field in object with object with null values', () => {
+      let obj = {
+        label1: null,
+        label2: null,
+        arr: [],
+        obj: {
+          test: null,
+          titi: null
+        }
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, true)
+    })
+
+    it('should return true if a deep value is not null', () => {
+      let obj = {
+        label1: null,
+        label2: null,
+        arr: [],
+        obj: {
+          test: 'toto',
+          titi: null
+        }
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, false)
+    })
+
+    it('should return false if a field is empty', () => {
+      let obj = {
+        label1: '',
+        label2: null,
+        arr: [],
+        obj: {
+          test: '',
+          titi: ''
+        }
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, true)
+    })
+
+    it('should return false if all fields are empty', () => {
+      let obj = {
+        label1: '',
+        label2: '',
+        obj: {
+          test: '',
+          titi: ''
+        }
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, true)
+    })
+
+    it('should return true if one field is defined', () => {
+      let obj = {
+        label1: '',
+        label2: 'toto',
+        obj: {
+          test: '',
+          titi: ''
+        }
+      }
+      let result = converter._areAllFieldEmpty(obj)
+      assert.strictEqual(result, false)
+    })
   })
 
   describe('Get model primary keys', () => {

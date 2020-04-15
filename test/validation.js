@@ -37,6 +37,22 @@ describe('Validation', () => {
         })
       })
 
+      it('should validate number if it is a string', () => {
+        let schema = {
+          firstname: ['>=', 4],
+          age: ['>=', 18]
+        }
+        let data = {
+          firstname: 'John',
+          age: '42'
+        }
+        let result = validation.checkObject(schema, data)
+        assert.deepStrictEqual(result, {
+          valid: true,
+          newData: data
+        })
+      })
+
       it('should return error on firstname', () => {
         let schema = ['object', {
           firstname: ['>=', 10],
@@ -606,7 +622,7 @@ describe('Validation', () => {
       let schema = ['object', {
         firstname: ['>=', 4],
         age: ['>=', 18],
-        phone: ['default', '', '==', 10]
+        phone: ['default', '', 'type', 'phone']
       }]
       let data = {
         firstname: 'John',
