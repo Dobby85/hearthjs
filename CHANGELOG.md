@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.4.1
+- Don't display migration diff if file is too big
+
 ### v2.4.0
 - Correct bugs
 - Can add force and yes option to migrate command
