@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.4.2
+- Fix bug in mustache when a loop was too big and results in a `maximum call stacks size exceeded`
+
 ### v2.4.1
 - Don't display migration diff if file is too big
 
