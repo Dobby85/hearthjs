@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.4.3
+- Add object type in converter to avoid duplicating object
+
 ### v2.4.2
 - Fix bug in mustache when a loop was too big and results in a `maximum call stacks size exceeded`
 

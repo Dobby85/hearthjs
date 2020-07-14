@@ -72,6 +72,56 @@ describe('Converter', () => {
     }])
   })
 
+  it('should not duplicate object containing object (Column of type JSONB)', () => {
+    let model = [{
+      id: ['<<idproduct>>'],
+      carrier: ['<carrier>'],
+      subtype: {
+        subCarrier: ['<subcarrier>']
+      }
+    }]
+    let data = [ { idproduct: 1,
+      carrier: { id: 1 },
+      subcarrier: { id: 4 }
+    },
+    { idproduct: 1,
+      carrier: { id: 1 },
+      subcarrier: { id: 4 }
+    },
+    { idproduct: 1,
+      carrier: { id: 1 },
+      subcarrier: { id: 4 }
+    },
+    { idproduct: 1,
+      carrier: { id: 1 },
+      subcarrier: { id: 4 }
+    },
+    { idproduct: 2,
+      carrier: { id: 'toto', sub: { id: 6 } },
+      subcarrier: {}
+    },
+    { idproduct: 3,
+      carrier: { id: 'toto', sub: { id: 6 } },
+      subcarrier: {}
+    } ]
+
+    let result = converter.sqlToJson(model, data)
+    assert.strictEqual(result.length, 3)
+    assert.deepStrictEqual(result, [{
+      id: 1,
+      carrier: { id: 1 },
+      subtype: { subCarrier: { id: 4 } }
+    }, {
+      id: 2,
+      carrier: { id: 'toto', sub: { id: 6 } },
+      subtype: { subCarrier: {} }
+    }, {
+      id: 3,
+      carrier: { id: 'toto', sub: { id: 6 } },
+      subtype: { subCarrier: {} }
+    }])
+  })
+
   it('should make a simple object conversion', () => {
     let model = ['object', {
       id: ['<<id>>'],
