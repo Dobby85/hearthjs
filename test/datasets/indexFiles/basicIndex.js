@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const hearthjs = require('../../../../lib')
 
 const server = {
   beforeInit: function (callback) {
@@ -7,6 +8,8 @@ const server = {
   },
 
   init: function (server, callback) {
+    server.use(hearthjs.express.urlencoded({ extended: false }))
+    server.use(hearthjs.express.json())
     fs.appendFile(path.join(__dirname, 'test.test'), 'tchoupi', callback)
   },
 

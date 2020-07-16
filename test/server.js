@@ -96,11 +96,16 @@ describe('Server', () => {
 
   describe('API', function () {
     before(function (done) {
-      process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
-      app.run('test', process.env.HEARTH_SERVER_PATH, done)
+      fs.copyFile(path.join(__dirname, 'datasets', 'indexFiles', 'basicIndex.js'), path.join(__dirname, 'datasets', 'myApp', 'server', 'index.js'), (err) => {
+        assert.strictEqual(err, null)
+        process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
+        app.run('test', process.env.HEARTH_SERVER_PATH, done)
+      })
     })
 
     after((done) => {
+      fs.unlinkSync(path.join(__dirname, 'datasets', 'myApp', 'server', 'index.js'))
+      fs.unlinkSync(path.join(__dirname, 'datasets', 'myApp', 'server', 'test.test'))
       app.close(done)
     })
 
