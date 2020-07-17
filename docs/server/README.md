@@ -144,3 +144,16 @@ const server = {
 
 module.exports = server
 ```
+
+### Run in production
+
+When you use the command `hearthjs start prod`, hearthjs starts an HTTPS server.
+
+**WARNING**
+
+Before running a production environment, you have to put your private key and your certificates under `/server/certificates`. It should looks like:
+
+- `/server/certificates/server.key`
+- `/server/certificates/server.cert`
+
+Hearthjs automatically run the server on port `443`.

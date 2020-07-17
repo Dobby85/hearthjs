@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.6.0
+- Run a HTTPS server when using `prod` environment.
+
 ### v2.5.1
 - Add assertTableOfObject in helper
 
