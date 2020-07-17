@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.6.1
+- Can update listening port for HTTPS
+
 ### v2.6.0
 - Run a HTTPS server when using `prod` environment.
 
