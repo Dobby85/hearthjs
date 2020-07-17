@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.5.1
+- Add assertTableOfObject in helper
+
 ### v2.5.0
 - Remove JSON parse middleware from hearthjs, now you have to set it in your **init function**.
 
