@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.6.2
+- Can set a lang key for all translations used in schema
+
 ### v2.6.1
 - Can update listening port for HTTPS
 
