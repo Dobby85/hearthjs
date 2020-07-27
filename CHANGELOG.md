@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.6.3
+- Remove https server for prod environment
+
 ### v2.6.2
 - Can set a lang key for all translations used in schema
 
