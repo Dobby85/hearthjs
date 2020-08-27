@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.6.4
+- Add auth token in cookie and in Authorization header
+
 ### v2.6.3
 - Remove https server for prod environment
 

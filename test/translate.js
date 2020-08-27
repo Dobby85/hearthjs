@@ -55,27 +55,27 @@ describe('Translate', () => {
 
     it('should return the key if lang and defaultLanguage does not exist in translations', () => {
       translate._setDefaultLanguage('eu')
-      assert.strictEqual(translate.t('hello', 'be'), 'hello')
+      assert.strictEqual(translate.tr('hello', 'be'), 'hello')
     })
 
     it('should return the key if default language exists but not the key', () => {
       translate._setDefaultLanguage('en')
-      assert.strictEqual(translate.t('nope'), 'nope')
+      assert.strictEqual(translate.tr('nope'), 'nope')
     })
 
     it('should return the value if the key and default language exists', () => {
       translate._setDefaultLanguage('en')
-      assert.strictEqual(translate.t('hello'), 'hi')
+      assert.strictEqual(translate.tr('hello'), 'hi')
     })
 
     it('should return the key lang exists but not the key', () => {
       translate._setDefaultLanguage('en')
-      assert.strictEqual(translate.t('nope', 'fr'), 'nope')
+      assert.strictEqual(translate.tr('nope', 'fr'), 'nope')
     })
 
     it('should return the value if the key and the lang exists', () => {
       translate._setDefaultLanguage('en')
-      assert.strictEqual(translate.t('me', 'fr'), 'moi')
+      assert.strictEqual(translate.tr('me', 'fr'), 'moi')
     })
 
     it('should return the key if the value is empty', () => {
