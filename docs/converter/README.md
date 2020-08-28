@@ -2,7 +2,7 @@
 
 HearthJS can transform your postgreSQL rows in JSON object. You can define object or array.
 
-In this example, we wanna get one account which contain a list of users.
+In this example, we want to get one account which contains a list of users.
 
 ```js
 let out = ['object', {

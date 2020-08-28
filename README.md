@@ -1,8 +1,8 @@
 # HearthJS
 
-HearthJS is made to build NodeJS server faster. It gives many tools to increase your productivity and let you focus only on your real functionnality.
+HearthJS is made to build NodeJS server faster. It gives you many tools to increase your productivity and let you focus only on your real functionalities.
 
-Here is a list of tools that HearthJS manage
+Here is a list of tools that HearthJS manages:
 
 - Translations
 - Logger

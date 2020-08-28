@@ -28,9 +28,9 @@ You can add following keys to a schema
 
 ```js
 {
-  before: (req, res, next) => {}, // Function execute before the SQL Request
-  after: (req, res, data, next) => {}, // Function execute after the SQL Request, it receives the result of the SQL Request in data
-  successMsg: '', // Message return if the request succeed
+  before: (req, res, next) => {}, // Function executes before the SQL Request
+  after: (req, res, data, next) => {}, // Function executes after the SQL Request, it receives the result of the SQL Request in data
+  successMsg: '', // Message returned if the request succeed
   middleware: [], // A list of middleware to execute for the route
   query: 'sqlFile', // The query to execute between before and after
   function: (req, res) => {}, // Function to execute
@@ -39,7 +39,7 @@ You can add following keys to a schema
 }
 ```
 
-In the `before` and `after` function, if you want return an error, pass a string to the next function. It will return an error with your defined string as message. If you receive data in `after` function, they will not be sent.
+In the `before` and `after` function, if you want to return an error, pass a string to the next function. It will return an error with your defined string as message. If you receive data in `after` function, they will not be sent.
 
 ```js
 {
@@ -83,7 +83,7 @@ hearthjs.api.define('apiName', (router) => {
 
 ### Route without schema
 
-If you don't wanna execute a schema but a simple function like express, you can set your function instead of a schema.
+If you don't want to execute a schema but a simple function like express, you can set your function instead of a schema.
 
 ```js
 const schema = {
@@ -101,7 +101,7 @@ hearthjs.api.define('apiName', schema, (router) => {
 
 ### Returned data
 
-HearthJS return a JSON object with the following property to the user.
+HearthJS returns a JSON object with the following properties to the user.
 
 ```js
 {
