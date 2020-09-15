@@ -1,6 +1,6 @@
 {
   "name": "hearthjs",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "description": "A NodeJS server framework to build fast Rest API",
   "main": "lib/index.js",
   "bin": "bin/hearthjs",

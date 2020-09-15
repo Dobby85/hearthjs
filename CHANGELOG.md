@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.6.5
+- Can update status code in before/after callback
+
 ### v2.6.4
 - Add auth token in cookie and in Authorization header
 

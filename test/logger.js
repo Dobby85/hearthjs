@@ -65,7 +65,7 @@ describe('Logger', () => {
         let _logContent = fs.readFileSync(_logFilePath, 'utf8')
         assert.strictEqual(_logContent.includes('GET /crash started'), true)
         assert.strictEqual(_logContent.includes('GET /crash ended in'), false)
-        assert.strictEqual(_logContent.includes('(200)'), false)
+        assert.strictEqual(_logContent.includes('(400)'), false)
         done()
       })
     })
@@ -374,7 +374,7 @@ function executeCluster (mode, nbCluster, port, callback) {
 
   setTimeout(() => {
     return callback()
-  }, 1000)
+  }, 1500)
 }
 
 /**

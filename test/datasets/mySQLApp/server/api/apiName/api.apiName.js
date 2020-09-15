@@ -7,7 +7,7 @@ const schemas = {
       let newData = {
         person: data[0].firstname + ' ' + data[0].lastname
       }
-      next(null, newData)
+      next(null, 200, newData)
     },
     successMsg: 'Success'
   },

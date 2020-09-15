@@ -39,17 +39,18 @@ You can add following keys to a schema
 }
 ```
 
-In the `before` and `after` function, if you want return an error, pass a string to the next function. It will return an error with your defined string as message. If you receive data in `after` function, they will not be sent.
+In the `before` and `after` function, if you want return an error, pass a string to the next function. It will return an error with your defined string as message. If you receive data in `after` function, they will not be sent.  
+You can update the status code in before/after function.
 
 ```js
 {
   before: (req, res, next) => {
-    next('Error') // Will return Error as message to the user
+    next('Error', 400) // Will return Error as message to the user
   }
 }
 ```
 
-You can update `data` return by next by giving it the new `data`.
+You can update `data` returned by next by giving it the new `data`.
 
 ```js
 {
@@ -57,7 +58,7 @@ You can update `data` return by next by giving it the new `data`.
     let newData = {
       firstname: 'John'
     }
-    next(null, newData) // Will return Error as message to the user
+    next(null, 200, newData) // Will return Error as message to the user
   }
 }
 ```

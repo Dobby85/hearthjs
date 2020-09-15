@@ -109,9 +109,10 @@ describe('Server', () => {
       app.close(done)
     })
 
-    it('should serve schema-a route which return an error', function (done) {
+    it('should serve schema-a route which return an error and update status code in before', function (done) {
       request.get(app.server.getEndpoint() + 'schema-a', function (err, response, body) {
         assert.strictEqual(err, null)
+        assert.strictEqual(response.statusCode, 402)
         body = JSON.parse(body)
         assert.strictEqual(body.success, false)
         assert.strictEqual(body.message, 'Error...')
@@ -239,7 +240,7 @@ describe('Server', () => {
       })
     })
 
-    it('should validate in data', (done) => {
+    it('should validate in data and update status code in after', (done) => {
       let accounts = [{
         name: 'Account1',
         users: [{
@@ -256,6 +257,7 @@ describe('Server', () => {
         json: { accounts: accounts }
       }, function (err, response, body) {
         assert.strictEqual(err, null)
+        assert.strictEqual(response.statusCode, 201)
         assert.deepStrictEqual(body, {
           success: true,
           data: { accounts: accounts },
@@ -282,6 +284,7 @@ describe('Server', () => {
         json: { accounts: accounts }
       }, function (err, response, body) {
         assert.strictEqual(err, null)
+        assert.strictEqual(response.statusCode, 400)
         assert.deepStrictEqual(body, {
           success: false,
           data: {},
@@ -603,7 +606,7 @@ describe('Server', () => {
           done()
         })
       })
-    })
+    }).timeout(5000)
 
     it('should take the port send via CLI', (done) => {
       executeCluster('1', '4000', () => {
@@ -613,7 +616,7 @@ describe('Server', () => {
           done()
         })
       })
-    })
+    }).timeout(5000)
 
     it('should load balance between all workers 2 workers', (done) => {
       executeCluster('2', '8080', () => {
@@ -745,7 +748,7 @@ describe('Server', () => {
           }
         }
       })
-    }).timeout(6000)
+    }).timeout(10000)
   })
 })
 
@@ -765,7 +768,7 @@ function executeCluster (nbCluster, port, callback) {
 
   setTimeout(() => {
     return callback()
-  }, 1000)
+  }, 1500)
 }
 
 /**

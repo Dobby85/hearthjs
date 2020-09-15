@@ -12,7 +12,7 @@ let myMiddleware = function (req, res, next) {
 const schemas = {
   getSchemaA: {
     before: (req, res, next) => {
-      next(t('Error...', 'fr'))
+      next(t('Error...', 'fr'), 402)
     }
   },
 
@@ -96,7 +96,7 @@ const schemas = {
     }],
 
     after: (req, res, data, next) => {
-      next(null, req.body)
+      next(null, 201, req.body)
     }
   },
 
