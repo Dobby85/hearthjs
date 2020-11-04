@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.7.0
+- Upgrade commander and pg package to be comaptible with node 14.15
+
 ### v2.6.5
 - Can update status code in before/after callback
 

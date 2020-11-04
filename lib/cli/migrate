@@ -3,6 +3,10 @@ const program = require('commander')
 const migrationCli = require('../migrationCLI')
 
 program
+  .storeOptionsAsProperties(false)
+  .passCommandToAction(false)
+
+program
   .arguments('[mode]')
   .option('-v, --version <version>', 'Migrate to a specific version')
   .option('-c, --create', 'Create a migration')
