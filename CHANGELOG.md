@@ -1,5 +1,9 @@
 # HearthJS
 
+### v2.8.0
+- Can send index in include parameters for templating
+- Can set default value for array and object
+
 ### v2.7.0
 - Upgrade commander and pg package to be comaptible with node 14.15
 

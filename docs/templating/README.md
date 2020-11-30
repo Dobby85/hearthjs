@@ -158,7 +158,7 @@ You can also send parameters to your includes.
 
 ```sql
 -- toInclude.sql
-SELECT {{ data.params[0] }}, {{ data.params[1]}}
+SELECT {{ data.parameters[0] }}, {{ data.parameters[1]}}
 ```
 
 ```sql
@@ -166,7 +166,7 @@ SELECT {{ data.params[0] }}, {{ data.params[1]}}
 {-> toInclude(data.body.firstname, data.body.lastname) <-}
 ```
 
-In file `toInclude.sql`, value of `data.params[0]` will be `data.firstname` and value of `data.params[1]` will be `data.lastname`
+In file `toInclude.sql`, value of `data.parameters[0]` will be `data.firstname` and value of `data.parameters[1]` will be `data.lastname`
 
 *You send an unlimited number of parameter*
 

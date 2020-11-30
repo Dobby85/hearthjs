@@ -555,6 +555,105 @@ describe('Validation', () => {
       })
     })
 
+    it('should validate and set default value for an array', () => {
+      let schema = {
+        firstname: ['>=', 4],
+        age: ['>=', 18],
+        list: ['default', [], {
+          data: [],
+          data2: []
+        }]
+      }
+      let data = {
+        firstname: 'John',
+        age: 42
+      }
+      let result = validation.checkObject(schema, data)
+      assert.deepStrictEqual(result, {
+        valid: true,
+        newData: {
+          firstname: 'John',
+          age: 42,
+          list: []
+        }
+      })
+    })
+
+    it('should validate deeper if default value is not used', () => {
+      let schema = {
+        firstname: ['>=', 4],
+        age: ['>=', 18],
+        list: ['array', {
+          data: ['>', 2],
+          data2: []
+        }, 'default', []]
+      }
+      let data = {
+        firstname: 'John',
+        age: 42,
+        list: [{
+          data: 'value',
+          data2: 'value2'
+        }, {
+          data: 'v',
+          data2: 'value2'
+        }]
+      }
+      let result = validation.checkObject(schema, data)
+      assert.deepStrictEqual(result, {
+        valid: false,
+        message: 'data must be > 2'
+      })
+    })
+
+    it('should validate object if default value is not used', () => {
+      let schema = {
+        firstname: ['>=', 4],
+        age: ['>=', 18],
+        obj: ['object', {
+          data: ['>', 3],
+          data2: []
+        }, 'default', null]
+      }
+      let data = {
+        firstname: 'John',
+        age: 42,
+        obj: {
+          data: 'va',
+          data2: 'value2'
+        }
+      }
+      let result = validation.checkObject(schema, data)
+      assert.deepStrictEqual(result, {
+        valid: false,
+        message: 'data must be > 3'
+      })
+    })
+
+    it('should set default value for object', () => {
+      let schema = {
+        firstname: ['>=', 4],
+        age: ['>=', 18],
+        obj: ['object', {
+          data: ['>', 3],
+          data2: []
+        }, 'default', null]
+      }
+      let data = {
+        firstname: 'John',
+        age: 42
+      }
+      let result = validation.checkObject(schema, data)
+      assert.deepStrictEqual(result, {
+        valid: true,
+        newData: {
+          firstname: 'John',
+          age: 42,
+          obj: null
+        }
+      })
+    })
+
     it('should add the key with the default value for an undetails object', () => {
       let schema = {
         firstname: ['>=', 4],
