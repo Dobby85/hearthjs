@@ -1,5 +1,7 @@
 # HearthJS
 
+### v2.8.1
+- Can return a specific status code in addon
 ### v2.8.0
 - Can send index in include parameters for templating
 - Can set default value for array and object

@@ -61,7 +61,7 @@ Example:
 let addon = {
   exec: function (addonValue, database, route, schema, req, res, next) {
     // Want return an error
-    return next('Oups an error occured')
+    return next('Oups an error occured', 500) // You can specify status code
   }
 }
 ```

@@ -161,7 +161,7 @@ describe('Cron', () => {
           }
         }, 1000)
       })
-    }).timeout(10000)
+    }).timeout(50000)
   })
 
   describe('Function add, start, stop and getAction', () => {
