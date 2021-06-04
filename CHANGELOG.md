@@ -1,5 +1,8 @@
 # HearthJS
-
+### v2.8.2
+- Fix translate command to also fin tr tag
+- Ignore the following directories while finding translations ('/uploads', '/migration', '/sql', '/config', '/datasets', '/logs')
+- Return a 400 code when an error is returned
 ### v2.8.1
 - Can return a specific status code in addon
 ### v2.8.0
