@@ -1,4 +1,7 @@
 # HearthJS
+
+### v2.8.3
+- Add `(` et `)` in translation regex
 ### v2.8.2
 - Fix translate command to also fin tr tag
 - Ignore the following directories while finding translations ('/uploads', '/migration', '/sql', '/config', '/datasets', '/logs')
