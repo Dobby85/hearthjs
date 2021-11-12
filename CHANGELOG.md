@@ -1,5 +1,10 @@
 # HearthJS
 
+### v2.9.0
+- Dot not parse upload directory when launching test. When the upload directory is big, it tooks too much time to launch tests.
+- Fix SQL request parameters bugs when including a SQL request in another SQL file.
+- Expose validation file in index.js
+- Stringify SQL parameters when printing request.
 ### v2.8.3
 - Add `(` et `)` in translation regex
 ### v2.8.2
