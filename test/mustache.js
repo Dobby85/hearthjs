@@ -507,7 +507,7 @@ describe('Mustache', () => {
         fsMock.restore()
       })
 
-      it.only('should render multiple includes', (done) => {
+      it('should render multiple includes', (done) => {
         let sqlFiles = {
           params: path.join(__dirname, 'datasets', 'params.sql'),
           include: path.join(__dirname, 'datasets', 'include.sql')
@@ -518,15 +518,14 @@ describe('Mustache', () => {
           age: 18
         }
         mustache.render('{{ data.age }} {-> include(data.firstname, data.lastname) <-}', data, {}, sqlFiles, (err, result) => {
-          console.log(err, result)
-          // delete result.varIndex
-          // delete result.loopIndexes
-          // assert.strictEqual(err, null)
-          // let expected = {
-          //   string: '$1 Second include: Params: $2, $3, $4',
-          //   data: [18, 'toto', 1, 'dupont']
-          // }
-          // assert.deepStrictEqual(result, expected)
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 Second include: Params: $2, $3, $4 $5',
+            data: [18, 'toto', 1, 'dupont', 'toto']
+          }
+          assert.deepStrictEqual(result, expected)
           done()
         })
       })

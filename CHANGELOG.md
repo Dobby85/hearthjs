@@ -1,5 +1,8 @@
 # HearthJS
 
+### v2.9.1
+- Remove semi colon
+- Fix authorization issue (https://github.com/Dobby85/hearthjs/pull/7)
 ### v2.9.0
 - Dot not parse upload directory when launching test. When the upload directory is big, it tooks too much time to launch tests.
 - Fix SQL request parameters bugs when including a SQL request in another SQL file.
