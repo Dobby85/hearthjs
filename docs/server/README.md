@@ -157,3 +157,11 @@ Before running a production environment, you have to put your private key and yo
 - `/server/certificates/server.cert`
 
 Hearthjs automatically run the server on port `443`.
+
+### Start a socket server
+
+You can start a socket server to send notification to your client.
+
+To start this socket server, add `startSocketServer` to your `index.js` file. You can also specify a cors object with this key : `socketCorsOptions`.
+
+See `socket.io` cors documentation for the object : https://socket.io/docs/v4/handling-cors/

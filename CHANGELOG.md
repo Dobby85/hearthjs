@@ -1,5 +1,7 @@
 # HearthJS
 
+### v3.0.0
+- Can start a socket server to send event to client
 ### v2.9.1
 - Remove semi colon
 - Fix authorization issue (https://github.com/Dobby85/hearthjs/pull/7)
