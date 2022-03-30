@@ -36,10 +36,10 @@ describe('Translate', () => {
       })
     })
 
-    it('should return an error if the lang directory does not exists', (done) => {
+    it('should not return an error if the lang directory does not exists because it is created if it does not exists', (done) => {
       process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'errorConfigApp', 'server')
       translate.initTranslations('en', (err) => {
-        assert.notStrictEqual(err, null)
+        assert.strictEqual(err, null)
         done()
       })
     })

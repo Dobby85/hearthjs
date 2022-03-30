@@ -1,5 +1,18 @@
 # HearthJS
 
+### v3.0.0
+- Can start a socket server to send event to client
+### v2.9.1
+- Remove semi colon
+- Fix authorization issue (https://github.com/Dobby85/hearthjs/pull/7)
+### v2.9.0
+- Dot not parse upload directory when launching test. When the upload directory is big, it tooks too much time to launch tests.
+- Fix SQL request parameters bugs when including a SQL request in another SQL file.
+- Expose validation file in index.js
+- Stringify SQL parameters when printing request.
+- Add `CASCADE` to clean `TRUNCATE` request (https://github.com/Dobby85/hearthjs/pull/6)
+- `request` and `debug` are moved to dependencies instead of dev dependencies (https://github.com/Dobby85/hearthjs/pull/8 & https://github.com/Dobby85/hearthjs/pull/9)
+- Init command create all directories with .gitkeep files (https://github.com/Dobby85/hearthjs/pull/10)
 ### v2.8.3
 - Add `(` et `)` in translation regex
 ### v2.8.2

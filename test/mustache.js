@@ -497,13 +497,37 @@ describe('Mustache', () => {
           'test/datasets': {
             'getCard.sql': 'Hello, Im {{ data.age }}',
             'loopInclude.sql': '{% data.names[i].values %} v: {{ data.names[i].values[j] }} {{%}}',
-            'params.sql': 'Params: {{ data.parameters[0] }}, {{ data.parameters[1] }}, {{ data.parameters[2] }}'
+            'params.sql': 'Params: {{ data.parameters[0] }}, {{ data.parameters[1] }}, {{ data.parameters[2] }}',
+            'include.sql': 'Second include: {-> params(data.parameters[0], 1, data.parameters[1]) <-} {{ data.parameters[0] }}'
           }
         })
       })
 
       afterEach(() => {
         fsMock.restore()
+      })
+
+      it('should render multiple includes', (done) => {
+        let sqlFiles = {
+          params: path.join(__dirname, 'datasets', 'params.sql'),
+          include: path.join(__dirname, 'datasets', 'include.sql')
+        }
+        let data = {
+          firstname: 'toto',
+          lastname: 'dupont',
+          age: 18
+        }
+        mustache.render('{{ data.age }} {-> include(data.firstname, data.lastname) <-}', data, {}, sqlFiles, (err, result) => {
+          delete result.varIndex
+          delete result.loopIndexes
+          assert.strictEqual(err, null)
+          let expected = {
+            string: '$1 Second include: Params: $2, $3, $4 $5',
+            data: [18, 'toto', 1, 'dupont', 'toto']
+          }
+          assert.deepStrictEqual(result, expected)
+          done()
+        })
       })
 
       it('should render an include', (done) => {
