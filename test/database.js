@@ -11,7 +11,8 @@ const user = 'postgres'
 const database = 'hearth_test'
 const port = 5432
 
-describe('Database', () => {
+describe('Database', function () {
+  this.timeout(100000)
   before(() => {
     process.env.HEARTH_SERVER_PATH = path.join(__dirname, 'datasets', 'myApp', 'server')
   })

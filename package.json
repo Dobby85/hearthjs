@@ -1,6 +1,6 @@
 {
   "name": "hearthjs",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A NodeJS server framework to build fast Rest API",
   "main": "lib/index.js",
   "bin": "bin/hearthjs",
@@ -17,17 +17,17 @@
   "license": "ISC",
   "dependencies": {
     "commander": "=6.2.0",
-    "cookie-parser": "=1.4.4",
+    "cookie-parser": "=1.4.6",
     "debug": "=4.1.1",
     "diff": "=4.0.1",
-    "express": "=4.16.4",
+    "express": "=4.18.1",
     "mocha": "=6.0.2",
     "moment": "=2.24.0",
     "nanoid": "=2.1.1",
     "node-cron": "=2.0.3",
     "pg": "=8.4.2",
     "request": "=2.88.2",
-    "socket.io": "=4.4.1"
+    "socket.io": "=4.5.3"
   },
   "devDependencies": {
     "assert": "=1.4.1",
@@ -39,7 +39,7 @@
     "eslint-plugin-standard": "=4.0.0",
     "file-mock": "=1.0.0",
     "mockdate": "=2.0.5",
-    "multer": "=1.4.1",
+    "multer": "=1.4.4",
     "nyc": "=14.0.0",
     "sinon": "=7.5.0",
     "suppose": "=0.6.2"

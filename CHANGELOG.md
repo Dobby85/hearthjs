@@ -1,5 +1,8 @@
 # HearthJS
 
+### v3.1.0
+- Update packages `express`, `cookie-parser` and `socket.io`
+
 ### v3.0.0
 - Can start a socket server to send event to client
 ### v2.9.1
