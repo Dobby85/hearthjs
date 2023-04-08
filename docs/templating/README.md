@@ -178,6 +178,10 @@ You can add pre-defined constant in your template. If you add an unknown constan
 
 This constant is a debug constant. When you want debug a template, you can add `{$ PRINT $}`. It will print the final request, their data and data you send it (`req`) in the console.
 
+##### PRINT_READY
+
+This constant is a debug constant. When you want debug a template, you can add `{$ PRINT_READY $}`. It will print the final request filled with data, you just have to copy paste it in your SQL app to try it!
+
 ##### ORDER BY
 
 If you have strange result in your final object. The cause is maybe a bad order of data. Add `{$ ORDER BY $}` at the end of your query. This will `ORDER BY` your query with all your primary key. Your primary key must be between `<<` and `>>`

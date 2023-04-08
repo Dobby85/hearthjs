@@ -6,7 +6,7 @@ In this example, we wanna get one account which contain a list of users.
 
 ```js
 let out = ['object', {
-  id: ['<<idAccount>>'],
+  id: ['<idAccount>'],
   name: ['<accountName>'],
   users: ['array', {
     id: ['<<idUser>>'],
@@ -17,7 +17,7 @@ let out = ['object', {
 // OR
 
 let out = {
-  id: ['<<idAccount>>'],
+  id: ['<idAccount>'],
   name: ['<accountName>'],
   users: [{
     id: ['<<idUser>>'],

@@ -1,5 +1,8 @@
 # HearthJS
 
+### v4.0.0
+- 🔥 Improve performance of `sqlToJson` function. On big queries, the function could be really slow. Performance has been imrpoved up to 80% on tested queries (parsing going from 1.34s to 248ms)
+- Add a new constant that can be used in SQL file (`PRINT_READY` which print the SQL request already filled with data)
 ### v3.0.0
 - Can start a socket server to send event to client
 ### v2.9.1
