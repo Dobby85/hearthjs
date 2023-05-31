@@ -3,6 +3,65 @@ const converter = require('../lib/converter')
 const assert = require('assert')
 
 describe('Converter', () => {
+  it('should work with JSON as data', () => {
+    let model = {
+        id: ['<<id>>'],
+        shipment: {
+          id: ['<shipmentid>'],
+          info: ['<shipmentinfo>']
+        }
+      }
+    let data = [{
+      "id": 808,
+      "shipmentid": 31001384,
+      "shipmentinfo": {
+        "modeCol": "REL",
+        "labelUrl": "https://mondialrelay.fr/ww2/PDF/StickerMaker2.aspx?ens=BDTEST1311&expedition=31001384&lg=FR&format=A4&crc=A8A9B3DD86715939D558214AB83F04A5",
+        "assurance": "1",
+        "accessPoint": {
+          "id": "12",
+          "country": { "name": "FRANCE", "alphaTwo": "FR", "alphaThree": "FRA" },
+          "isAnimated": false
+        }
+      }
+    }, {
+      "id": 808,
+      "shipmentid": 31001384,
+      "shipmentinfo": {
+        "modeCol": "REL",
+        "labelUrl": "https://mondialrelay.fr/ww2/PDF/StickerMaker2.aspx?ens=BDTEST1311&expedition=31001384&lg=FR&format=A4&crc=A8A9B3DD86715939D558214AB83F04A5",
+        "assurance": "1",
+        "accessPoint": {
+          "id": "12",
+          "country": { "name": "FRANCE", "alphaTwo": "FR", "alphaThree": "FRA" },
+          "isAnimated": false,
+        }
+      }
+    }, {
+      "id": null,
+      "shipmentid": null,
+      "shipmentinfo": null,
+    }]
+
+    let result = converter.sqlToJson(model, data)
+    assert.deepStrictEqual(result, {
+      id: 808,
+      shipment: {
+        id: 31001384,
+        info: {
+          modeCol: 'REL',
+          labelUrl: 'https://mondialrelay.fr/ww2/PDF/StickerMaker2.aspx?ens=BDTEST1311&expedition=31001384&lg=FR&format=A4&crc=A8A9B3DD86715939D558214AB83F04A5',
+          assurance: '1',
+          accessPoint: {
+            id: '12',
+            country: { name: 'FRANCE', alphaTwo: 'FR', alphaThree: 'FRA' },
+            isAnimated: false
+          }
+        }
+      }
+    })
+  })
+
   it('should set right data when using UNION in query', () => {
     let model = {
       id: ['<idproduct>'],
