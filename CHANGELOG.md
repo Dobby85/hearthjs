@@ -1,5 +1,8 @@
 # HearthJS
 
+### v4.1.0
+- Stop creating conf file if it does not exists on startup, use process.env instead (see doc)
+
 ### v4.0.1
 - Fix bug in SQL to JSON converter when using JSON object in database
 - Fix bug with test file refresh

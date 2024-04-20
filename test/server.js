@@ -41,10 +41,22 @@ describe('Server', () => {
       })
     })
 
-    it('should return an error if config file does not exists', (done) => {
+    it('should use process.env and convert numbers and boolean if config file does not exists', (done) => {
+      process.env.ENV_KEY = 'test'
+      process.env.NUM_KEY = '0123456789'
+      process.env.BOOL_KEY_1 = 'true'
+      process.env.BOOL_KEY_2 = 'false'
+      process.env.BOOL_KEY_3 = 'TRUE'
+      process.env.BOOL_KEY_4 = 'FALSE'
+
       server.config = {}
       server._loadConfig('notexists', {}, (err) => {
-        assert.notStrictEqual(err, null)
+        assert.strictEqual(server.config.ENV_KEY, 'test')
+        assert.strictEqual(server.config.NUM_KEY, 0123456789)
+        assert.strictEqual(server.config.BOOL_KEY_1, true)
+        assert.strictEqual(server.config.BOOL_KEY_2, false)
+        assert.strictEqual(server.config.BOOL_KEY_3, true)
+        assert.strictEqual(server.config.BOOL_KEY_4, false)
         done()
       })
     })

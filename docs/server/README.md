@@ -36,9 +36,8 @@ All your api filenames must respect the following convention `api.apiName.js`. Y
 
 ### Configuration
 
-You must have in your `server` directory a folder named `config`. `config` folder must have `dev.json`, `test.json` and `prod.json` files.
+Your application can save configuration from multiple way. In every case, here is the list of key which must be present in your configuration files:
 
-Here is the list of key which must be present in your configuration files:
 - `APP_SERVER_PORT`
 - `APP_SERVER_LANG`
 - `APP_DATABASE_USERNAME`
@@ -46,6 +45,30 @@ Here is the list of key which must be present in your configuration files:
 - `APP_DATABASE_NAME`
 - `APP_DATABASE_PASSWORD`
 - `APP_DATABASE_PORT`
+
+#### From config file (default)
+
+If your application have a `config` folder with the right environment configuration (`test.json`, `dev.json` or `prod.json`), it will be used by default.
+
+#### From environment variables
+
+If not config files could be found, no one will be created but we get `process.env`. Before returning config file, we parse every env values and convert `numbers` and `boolean` to real numbers and boolean.
+
+```json
+// environment variable
+{
+  "STR": "value",
+  "NUM": "123",
+  "BOOL": "true"
+}
+
+// would be converted to
+{
+  "STR": "value",
+  "NUM": 123,
+  "BOOL": true
+}
+```
 
 ### Cluster
 
