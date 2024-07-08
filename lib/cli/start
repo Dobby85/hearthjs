@@ -15,6 +15,7 @@ program
   .option('--db_name <dbName>', 'Database name')
   .option('--db_username <dbUsername>', 'Database username')
   .option('--db_password <dbPassword>', 'Database password')
+  .option('--console_log', 'Log in terminal')
   .description('Start server')
   .action((mode, options) => {
     modeValue = mode

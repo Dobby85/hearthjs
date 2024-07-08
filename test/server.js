@@ -25,10 +25,11 @@ describe('Server', () => {
       server._serverPath = process.env.HEARTH_SERVER_PATH
     })
 
-    it('should load test config', (done) => {
+    it('should load test config and merge with environment variable', (done) => {
       server._loadConfig('test', {}, (err) => {
         assert.strictEqual(err, null)
         assert.strictEqual(server.config.APP_SERVER_PORT, 8080)
+        assert.strictEqual(Object.keys(server.config).length > 10, true)
         done()
       })
     })

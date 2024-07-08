@@ -1,5 +1,11 @@
 # HearthJS
 
+### v4.1.1
+- Add an option to always log in the terminal
+```bash
+./hearthjs start prod --console_log
+```
+
 ### v4.1.0
 - Stop creating conf file if it does not exists on startup, use process.env instead (see doc)
 
