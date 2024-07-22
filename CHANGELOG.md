@@ -1,5 +1,8 @@
 # HearthJS
 
+### v4.1.2
+- Can migrate using config in environment variables
+
 ### v4.1.1
 - Add an option to always log in the terminal
 ```bash
