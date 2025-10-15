@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.1.3
+- Catch pg client error thrown
+
 ### v4.1.2
 - Can migrate using config in environment variables
 
