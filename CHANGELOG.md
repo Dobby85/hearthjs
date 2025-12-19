@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.1.4
+- Catch pg client error thrown #2
+
 ### 4.1.3
 - Catch pg client error thrown
 
