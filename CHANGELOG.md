@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.1.5
+- Upgrade pg version to get better error handling
+
 ### 4.1.4
 - Catch pg client error thrown #2
 
