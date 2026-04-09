@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.1.6
+- Add elastic APM to debug application
+
 ### 4.1.5
 - Upgrade pg version to get better error handling
 
