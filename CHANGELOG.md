@@ -1,6 +1,6 @@
 # HearthJS
 
-### 4.1.6
+### 4.1.7
 - Add elastic APM to debug application
 
 ### 4.1.5
