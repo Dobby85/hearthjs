@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.2.0
+- Fix bug with pool connection crash when the database is behind a proxy server
+
 ### 4.1.7
 - Add elastic APM to debug application
 
