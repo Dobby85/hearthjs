@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.2.2
+- Try fix to avoid database crash
+
 ### 4.2.1
 - Handle all phone numbers for validation
 
