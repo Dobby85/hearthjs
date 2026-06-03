@@ -1004,15 +1004,72 @@ describe('Validation', () => {
         })
       })
 
-      it('should be a valid phone', () => {
-        let result = validation._validateField(['type', 'phone'], '00 00 00 00 00', 'key')
+      it('should be a valid phone (French local with spaces)', () => {
+        let result = validation._validateField(['type', 'phone'], '06 12 34 56 78', 'key')
         assert.deepStrictEqual(result, {
           valid: true
         })
       })
 
-      it('should not match phone regex', () => {
-        let result = validation._validateField(['type', 'phone', 'errortypeMessage', 'Invalid phone'], 'a00 00 00 00 00', 'key')
+      it('should be a valid phone (French local with dots)', () => {
+        let result = validation._validateField(['type', 'phone'], '06.12.34.56.78', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid phone (French local no separator)', () => {
+        let result = validation._validateField(['type', 'phone'], '0612345678', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid phone (international + prefix)', () => {
+        let result = validation._validateField(['type', 'phone'], '+33 6 12 34 56 78', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid phone (international 00 prefix)', () => {
+        let result = validation._validateField(['type', 'phone'], '0033 6 12 34 56 78', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid phone (Belgian international)', () => {
+        let result = validation._validateField(['type', 'phone'], '+32 471 12 34 56', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid phone (UK international)', () => {
+        let result = validation._validateField(['type', 'phone'], '+44 7911 123456', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should be a valid phone (with dashes)', () => {
+        let result = validation._validateField(['type', 'phone'], '06-12-34-56-78', 'key')
+        assert.deepStrictEqual(result, {
+          valid: true
+        })
+      })
+
+      it('should not match phone regex (starts with letter)', () => {
+        let result = validation._validateField(['type', 'phone', 'errortypeMessage', 'Invalid phone'], 'a06 12 34 56 78', 'key')
+        assert.deepStrictEqual(result, {
+          valid: false,
+          message: 'Invalid phone'
+        })
+      })
+
+      it('should not match phone regex (too short)', () => {
+        let result = validation._validateField(['type', 'phone', 'errortypeMessage', 'Invalid phone'], '0612', 'key')
         assert.deepStrictEqual(result, {
           valid: false,
           message: 'Invalid phone'
