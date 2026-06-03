@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.2.1
+- Handle all phone numbers for validation
+
 ### 4.2.0
 - Fix bug with pool connection crash when the database is behind a proxy server
 
