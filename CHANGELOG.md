@@ -1,5 +1,8 @@
 # HearthJS
 
+### 4.3.0
+- Fix database silent crash
+
 ### 4.2.2
 - Try fix to avoid database crash
 
