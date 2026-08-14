@@ -1,5 +1,11 @@
 # HearthJS
 
+### 4.4.0
+- Apply `statement_timeout` to EVERY pool connection through the `options` startup parameter (it was previously set by a plain `SET` query, so only one connection of the pool had a timeout and a hung query could hold its slot forever)
+- Add a client-side `query_timeout` (default `timeout + 5000`ms, configurable with `queryTimeout`) so a query on a half-dead connection errors and releases its slot even when the server never answers
+- Make the pool size configurable with `APP_DATABASE_POOL_MAX` (config file or env), default still 10, and the client-side query timeout with `APP_DATABASE_QUERY_TIMEOUT`
+- Add `db.recycle(callback)` : rebuild a fresh pool with the original configuration and abandon the broken one (leaked or hung slots after a network cut) without restarting the process
+
 ### 4.3.0
 - Fix database silent crash
 
