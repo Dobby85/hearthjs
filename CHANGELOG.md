@@ -1,5 +1,13 @@
 # HearthJS
 
+### 4.5.0
+- Add `-f, --file <file>` to `./hearthjs test` : run only the test files whose path (relative to `server/`) contains the given value, so `./hearthjs test -s -f blog` runs `test.blog.js` instead of the whole suite. The option can be repeated
+- Add `-g, --grep <pattern>` to run only the tests whose title matches the pattern, and `-l, --list` to print the collected test files without running them
+- Add `--no-bail` to run every test even if one fails (the run still stops at the first failure by default)
+- Exit with the code `1` and print the available test files when `--file` matches nothing
+- Fix the test files collection : the recursive directory walk called back before the sub directories were read, so the file list was only complete because the test server took time to boot. It is now built synchronously before the server starts
+- Skip the file watchers when `-s, --stop` is given : a one shot run does not need to watch the server files
+
 ### 4.4.0
 - Apply `statement_timeout` to EVERY pool connection through the `options` startup parameter (it was previously set by a plain `SET` query, so only one connection of the pool had a timeout and a hung query could hold its slot forever)
 - Add a client-side `query_timeout` (default `timeout + 5000`ms, configurable with `queryTimeout`) so a query on a half-dead connection errors and releases its slot even when the server never answers

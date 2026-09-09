@@ -18,8 +18,35 @@ Many options are available with this command:
 - **--db_password** to override `APP_DATABASE_PASSWORD`
 - **--db_port** to override `APP_DATABASE_PORT`
 - **-s** or **--stop** to stop the script when all tests have been executed
+- **-f** or **--file** to run only the test files matching the given value. Can be repeated
+- **-g** or **--grep** to run only the tests whose title matches the given pattern
+- **-l** or **--list** to print the list of the test files and exit
+- **--no-bail** to run every test even if one fails. By default the run stops at the first failure
 
-When you run your test, by default, the script never end so when you update your server files or sql files or test files, tests rerun automatically with new changes.
+When you run your test, by default, the script never end so when you update your server files or sql files or test files, tests rerun automatically with new changes. With `-s`, the files are not watched: the tests run once and the process exits with the number of failures as exit code, which is what you want in a CI or when an agent runs the suite.
+
+### Run a single test file
+
+`-f` filters the collected test files on their path, relative to the `server` directory. The match is a case insensitive substring, so all of these run `/server/api/blog/test/test.blog.js`:
+
+```bash
+./hearthjs test -s -f blog
+./hearthjs test -s -f test.blog.js
+./hearthjs test -s -f api/blog/test/test.blog.js
+```
+
+`-f` can be repeated to run several files, and combined with `-g` to keep only some tests of these files:
+
+```bash
+./hearthjs test -s -f test.blog.js -f api/discount
+./hearthjs test -s -f test.blog.js -g "should create an article"
+```
+
+If no file matches, the command prints the available test files and exits with the code `1`. You can also list them without running anything:
+
+```bash
+./hearthjs test --list
+```
 
 *Note:* When you want to execute a request to your server, you can call the following function to get the `host` with the `port`.
 

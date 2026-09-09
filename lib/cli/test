@@ -3,6 +3,16 @@ const program = require('commander')
 const test = require('../test')
 const debug = require('debug')
 
+/**
+ * Allow to repeat the --file option
+ * @param {String} value Current value
+ * @param {Array} previous Previously collected values
+ * @return {Array} All collected values
+ */
+function collect (value, previous) {
+  return previous.concat([value])
+}
+
 program
   .option('-p, --port <port>', 'Server port')
   .option('--db_port <dbPort>', 'Database port')
@@ -11,6 +21,10 @@ program
   .option('--db_username <dbUsername>', 'Database username')
   .option('--db_password <dbPassword>', 'Database password')
   .option('-s, --stop', 'Stop when all tests are executed')
+  .option('-f, --file <file>', 'Only run test files matching <file>, can be repeated', collect, [])
+  .option('-g, --grep <pattern>', 'Only run tests whose title matches <pattern>')
+  .option('-l, --list', 'Print the list of test files and exit')
+  .option('--no-bail', 'Run every test even if one fails')
   .description('Run tests')
   .action((options) => {
     debug.disable()
